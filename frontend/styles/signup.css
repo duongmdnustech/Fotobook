@@ -1,0 +1,36 @@
+main {
+    margin-top: 10vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    color: var(--color-blue-primary)
+} 
+
+main .container {
+    display: flex;
+    justify-self: center;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+    padding: 20px;
+    border: gray solid 1px;
+    border-radius: 10px;
+    width: 200px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+main form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    width: 50vw;
+    justify-self: center;
+    align-self: center;
+    padding: 20px 40px;
+    border: gray 1px solid;
+    border-radius: 20px;
+}

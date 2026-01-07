@@ -1,0 +1,22 @@
+nav {
+    color: var(--color-white);
+}
+
+nav .title {
+    font-size: var(--title-font-size);
+    font-weight: bolder;
+    margin-left: 10vw;
+    align-items: center;
+    justify-items: center;
+    display: flex;
+    gap: 10px;
+}
+
+nav .title img {
+    width: var(--logo-size);
+    height: var(--logo-size);
+}
+
+nav .item {
+    margin-right: 10vw;
+}

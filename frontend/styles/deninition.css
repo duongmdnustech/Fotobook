@@ -1,0 +1,16 @@
+:root {
+    --title-font-size: 22px;
+    --description-font-size: 16px;
+    --logo-size: 30px;
+    --color-white: #fcfcfc;
+    --color-blue-primary: #276CF5;
+    --img-size-small: 30px;
+    --img-size-medium: 50px;
+    --img-size-large: 80px
+}
+
+.img-size-med {
+    width: var(--img-size-medium);
+    height: var(--img-size-medium);
+}
+
