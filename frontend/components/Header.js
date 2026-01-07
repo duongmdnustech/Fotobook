@@ -1,4 +1,5 @@
 const NavBar = (page) => {
+    const base_path = "/frontend/pages"
     return `
             <nav class="navbar bg-primary" data-bs-theme="dark">
                 <div class="container-fluid">
@@ -16,8 +17,8 @@ const NavBar = (page) => {
                         </div>
                     </form>
 
-                    <div class="item">${page == "Login" ? "Signup" :"Login"}</div>
-                </div>
+                    <a class="item" href="${page == "Login" ? base_path + "/signup.html" : base_path + "/login.html"}">${page == "Login" ? "Signup" :"Login"}</a>
+                </div> 
             </nav>
     `
 }

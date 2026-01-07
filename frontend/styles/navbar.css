@@ -19,4 +19,11 @@ nav .title img {
 
 nav .item {
     margin-right: 10vw;
+    text-decoration: none;
+    cursor: pointer;
+    color: var(--color-white);
+}
+
+nav .item:hover {
+    font-weight: bolder;
 }
