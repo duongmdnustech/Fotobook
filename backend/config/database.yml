@@ -9,7 +9,11 @@ default: &default
   encoding: unicode
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 6000
-  url: <%= ENV["DB_URL"] %>
+  username: postgres
+  password: duongnustech
+  host: localhost
+
+  # url: <%= ENV["DB_URL"] %>
 development:
   <<: *default
   database: fotobook

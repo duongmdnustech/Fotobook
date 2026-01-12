@@ -17,6 +17,9 @@ module Store
     config.autoload_lib(ignore: %w[assets tasks])
     config.time_zone = "Asia/Ho_Chi_Minh"
     config.active_record.schema_format = :ruby
+    config.generators do |g|
+      g.orm :active_record, primary_key_type: :uuid
+    end
 
     # Configuration for the application, engines, and railties goes here.
     #

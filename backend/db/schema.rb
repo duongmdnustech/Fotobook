@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_09_081423) do
-  create_table "products", force: :cascade do |t|
+ActiveRecord::Schema[8.1].define(version: 2026_01_12_081817) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
+  create_table "users", primary_key: "uid", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "name"
+    t.string "email"
+    t.boolean "enable_google_login"
+    t.string "fname"
+    t.string "lname"
+    t.string "password"
+    t.integer "role"
     t.datetime "updated_at", null: false
   end
 end
