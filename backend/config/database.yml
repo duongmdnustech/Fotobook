@@ -29,8 +29,12 @@ test:
 # is mounted as a persistent Docker volume in config/deploy.yml.
 production:
   primary:
-    <<: *default
-    url: <%= ENV["DB_URL"] %>
+    adapter: postgresql
+    encoding: unicode
+    username: <%= ENV.fetch("DB_USER") { nil } %>
+    password: <%= ENV.fetch("DB_PASS") { nil } %>
+    host: <%= ENV.fetch("DB_HOST") { nil } %>
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   cache:
     <<: *default
     database: storage/production_cache.sqlite3
