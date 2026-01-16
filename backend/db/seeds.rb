@@ -12,6 +12,8 @@ user2 = User.create(lname: "Bruce", fname: "John", email: "jbruce@example.com", 
 user3 = User.create(lname: "de Havana", fname: "Johnathan", email: "deHav.john@example.com", password: "12345678", role: "user")
 user4 = User.create(lname: "Richardson", fname: "Kelvin", email: "kel.rich@example.com", password: "12345678", role: "user")
 user5 = User.create(lname: "Hamilton", fname: "Colin", email: "hal.colin@example.com", password: "12345678", role: "user")
+puts "Total Users: #{User.count}"
+
 
 gmt7 = Time.now.getlocal("+07:00")
 album1 = Album.create(title: "Nature Collection", description: "A collection of beautiful nature photographs.", public_at: nil, created_at: Time.now.getlocal("+07:00"), status: true, user_id: user1.uid)
@@ -21,6 +23,7 @@ album4 = Album.create(title: "Travel Diaries", description: "Memories from vario
 Album.where(status: true, public_at: nil).find_each do |photo|
   photo.update!(public_at: gmt7)
 end
+puts "Total Albums: #{Album.count}, Public Albums: #{Album.where(status: true).count}, Private Albums: #{Album.where(status: false).count}"
 
 Photo.create(title: "Fall in Minesota", description: "A beautiful fall scenery in Minnesota.", public_at: nil, upload_at: Time.now.getlocal("+07:00"), status: false, url: "", user_id: user2.uid)
 
@@ -37,7 +40,7 @@ end
 # 5 with status: false
 Photo.create(title: "Spring Blossoms", description: "Cherry blossoms in full bloom.", public_at: nil, upload_at: Time.now.getlocal("+07:00"), status: false, url: "", user_id: user3.uid, album_id: album1.album_id)
 Photo.create(title: "Beach Sunset", description: "Sun setting over calm ocean.", public_at: nil, upload_at: Time.now.getlocal("+07:00"), status: false, url: "", user_id: user4.uid, album_id: album4.album_id)
-Photo.create(title: "Old Barn", description: "Rustic barn surrounded by fields.", public_at: nil, upload_at: Time.now.getlocal("+07:00"), status: false, url: "", user_id: user5.uid, album_id: nil)
+Photo.create!(title: "Old Barn", description: "Rustic barn surrounded by fields.", public_at: nil, upload_at: Time.now.getlocal("+07:00"), status: false, url: "", user_id: user5.uid, album_id: nil)
 Photo.create(title: "Rainy Street", description: "Wet pavement reflecting neon signs.", public_at: nil, upload_at: Time.now.getlocal("+07:00"), status: false, url: "", user_id: user2.uid, album_id: album2.album_id)
 Photo.create(title: "Hidden Waterfall", description: "A secluded waterfall in the woods.", public_at: nil, upload_at: Time.now.getlocal("+07:00"), status: false, url: "", user_id: user1.uid, album_id: album1.album_id)
 puts "Total Photos: #{Photo.count}, Public Photos: #{Photo.where(status: true).count}, Private Photos: #{Photo.where(status: false).count}"
@@ -50,3 +53,4 @@ Following.create(follower_id: user5.uid, following_id: user1.uid)
 Following.create(follower_id: user3.uid, following_id: user2.uid)
 Following.create(follower_id: user4.uid, following_id: user2.uid)
 Following.create(follower_id: user5.uid, following_id: user2.uid)
+puts "Total Followings: #{Following.count}"
