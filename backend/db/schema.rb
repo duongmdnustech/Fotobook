@@ -10,10 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_15_025321) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_15_100229) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
+
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "user_role", ["user", "admin"]
 
   create_table "albums", primary_key: "album_id", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -36,7 +40,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_15_025321) do
   end
 
   create_table "photos", primary_key: "photo_id", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "album_id", null: false
+    t.uuid "album_id"
     t.string "description"
     t.datetime "public_at", default: -> { "now()" }
     t.boolean "status", default: false
@@ -51,18 +55,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_15_025321) do
   create_table "users", primary_key: "uid", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.string "email", null: false
-    t.boolean "enable_google_login"
+    t.boolean "enable_google_login", default: false
     t.string "fname", null: false
     t.string "lname", null: false
     t.string "password", null: false
-    t.integer "role", default: 0, null: false
+    t.enum "role", default: "user", enum_type: "user_role"
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["fname", "lname"], name: "index_users_on_fname_and_lname", opclass: :gist_trgm_ops, using: :gist
   end
 
-  add_foreign_key "albums", "users", primary_key: "uid"
-  add_foreign_key "followings", "users", column: "follower_id", primary_key: "uid"
-  add_foreign_key "followings", "users", column: "following_id", primary_key: "uid"
-  add_foreign_key "photos", "albums", primary_key: "album_id"
-  add_foreign_key "photos", "users", primary_key: "uid"
+  add_foreign_key "albums", "users", primary_key: "uid", on_delete: :cascade
+  add_foreign_key "followings", "users", column: "follower_id", primary_key: "uid", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "followings", "users", column: "following_id", primary_key: "uid", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "photos", "albums", primary_key: "album_id", on_delete: :nullify
+  add_foreign_key "photos", "users", primary_key: "uid", on_delete: :cascade
 end

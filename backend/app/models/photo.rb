@@ -1,5 +1,5 @@
 class Photo < ApplicationRecord
   self.primary_key = "photo_id"
-  belong_to :user
-  belong_to :album
+  belongs_to :user
+  belongs_to :album
 end

@@ -28,22 +28,23 @@ test:
 # Store production database in the storage/ directory, which by default
 # is mounted as a persistent Docker volume in config/deploy.yml.
 production:
-  primary:
-    adapter: postgresql
-    encoding: unicode
-    username: <%= ENV.fetch("DB_USER") { nil } %>
-    password: <%= ENV.fetch("DB_PASS") { nil } %>
-    host: <%= ENV.fetch("DB_HOST") { nil } %>
-    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  cache:
-    <<: *default
-    database: storage/production_cache.sqlite3
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *default
-    database: storage/production_queue.sqlite3
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *default
-    database: storage/production_cable.sqlite3
-    migrations_paths: db/cable_migrate
+  # primary:
+  adapter: postgresql
+  encoding: unicode
+  url: "postgresql://neondb_owner:npg_5s8AtehaKCcP@ep-restless-shape-ah2e7p9w-pooler.c-3.us-east-1.aws.neon.tech/fotobook?sslmode=require&channel_binding=require"
+  # username: neondb_owner
+  # password: npg_5s8AtehaKCcP
+  # host: ep-restless-shape-ah2e7p9w-pooler.c-3.us-east-1.aws.neon.tech
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  # cache:
+  #   <<: *default
+  #   database: storage/production_cache.sqlite3
+  #   migrations_paths: db/cache_migrate
+  # queue:
+  #   <<: *default
+  #   database: storage/production_queue.sqlite3
+  #   migrations_paths: db/queue_migrate
+  # cable:
+  #   <<: *default
+  #   database: storage/production_cable.sqlite3
+  #   migrations_paths: db/cable_migrate
