@@ -7,11 +7,21 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+<<<<<<< Updated upstream
 user1 = User.create(lname: "Honda", fname: "Yakuza", email: "honda.yz@example.com", password: "12345678",role: "admin")
 user2 = User.create(lname: "Bruce", fname: "John", email: "jbruce@example.com", password: "12345678", role: "user")
 user3 = User.create(lname: "de Havana", fname: "Johnathan", email: "deHav.john@example.com", password: "12345678", role: "user")
 user4 = User.create(lname: "Richardson", fname: "Kelvin", email: "kel.rich@example.com", password: "12345678", role: "user")
 user5 = User.create(lname: "Hamilton", fname: "Colin", email: "hal.colin@example.com", password: "12345678", role: "user")
+=======
+user1 = User.create(lname: "Honda", fname: "Yakuza", email: "honda.yz@example.com", password: "TestP@sSword123",role: "admin")
+user2 = User.create(lname: "Bruce", fname: "John", email: "jbruce@example.com", password: "TestP@sSword123", role: "user")
+user3 = User.create(lname: "Havana", fname: "Johnathan", email: "deHav.john@example.com", password: "TestP@sSword123", role: "user")
+user4 = User.create(lname: "Richardson", fname: "Kelvin", email: "kel.rich@example.com", password: "TestP@sSword123", role: "user")
+user5 = User.create(lname: "Hamilton", fname: "Colin", email: "hal.colin@example.com", password: "TestP@sSword123", role: "user")
+puts "Total Users: #{User.count}"
+
+>>>>>>> Stashed changes
 
 gmt7 = Time.now.getlocal("+07:00")
 album1 = Album.create(title: "Nature Collection", description: "A collection of beautiful nature photographs.", public_at: nil, created_at: Time.now.getlocal("+07:00"), status: true, user_id: user1.uid)
