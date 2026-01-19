@@ -1,0 +1,27 @@
+.post-view {
+    display: grid;
+    grid-template-areas: "sidebar main";
+    grid-template-columns: 10vw 1fr;
+    justify-self: center;
+    align-self: center;
+    justify-items: center;
+    margin-top: 50px;
+}
+
+.sidebar {
+    grid-area: sidebar;
+}
+
+.post-view .main {
+    grid-area: main;
+    align-self: center;
+    align-items: center;
+    justify-items: center;
+}
+
+#card-group {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
