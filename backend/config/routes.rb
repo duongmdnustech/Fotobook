@@ -12,10 +12,15 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   # Authentication /auth
-  resources :users, only: [:edit, :update, :show, :destory] do
-    resources :albums do
-      resources :photos
-    end 
-    resources :photos
+  resources :users, only: [:show, :new] 
+  resources :albums, :photos 
+  resources  :auth, controller: :auth do
+    collection do
+      post :login
+      post :signup
+    end
   end
+
+  resource :profile, controller: "users"
+  resolve('User') {[:profile]}
 end
