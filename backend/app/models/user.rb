@@ -1,11 +1,36 @@
+class UserValidator < ActiveModel::Validator
+  def validate(record)
+    if record.fname.blank?
+      record.errors.add :fname, "is required"
+    end
+
+    if record.lname.blank?
+      record.errors.add :lname, "is required"
+    end
+
+    if record.email.blank?
+      record.errors.add :email, "is required"
+    end
+
+    if record.password.blank?
+      record.errors.add :password, "is required"
+    end
+  end
+end
+
 class User < ApplicationRecord
   self.primary_key = "uid"
 
-  validates :fname, presence: true, format: {with: /\A[A-Za-zÀ-ỹ]+\z/, message: "Invalid Name"}
-  validates :lname, presence: true, format: {with: /\A[A-Za-zÀ-ỹ]+\z/, message: "Invalid Name"}
-  validates :email, uniqueness: true, format: {with: URI::MailTo::EMAIL_REGEXP, message: "Invalid Email"}
-  validates :role, inclusion: {in: ["user", "admin"]}
-  validates :password, format: {with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}\z/, message:"Password must have at least 8 characters, contains at least 1 downcase alphabet, 1 uppercase alphabet, 1 number and 1 special character"}
+  validates_with UserValidator
+  validates :fname, format: {with: /\A[A-Za-zÀ-ỹ]+\z/, message: "Invalid Name"}, unless: :fname.blank?
+  validates :lname, format: {with: /\A[A-Za-zÀ-ỹ]+\z/, message: "Invalid Name"}, unless: :lname.blank?
+  validates :email, uniqueness: true, format: {with: URI::MailTo::EMAIL_REGEXP, message: "Invalid Email"}, unless: :email.blank?
+  validates :role, inclusion: {in: ["user", "admin"]}, unless: :role.blank? 
+  validates :password, 
+  format: {
+    with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}\z/, 
+    message:"Password must have at least 8 characters, contains at least 1 downcase alphabet, 1 uppercase alphabet, 1 number and 1 special character"
+  }, unless: :password.blank?
 
   before_save :password_hashing
 

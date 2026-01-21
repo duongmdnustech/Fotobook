@@ -10,8 +10,8 @@ default: &default
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 6000
   username: postgres
-  password: duongnustech
-  host: localhost
+  password: 12345678
+  host: 172.23.64.1
 
   # url: <%= ENV["DB_URL"] %>
 development:
