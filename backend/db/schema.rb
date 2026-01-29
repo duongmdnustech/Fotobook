@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_15_100229) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_26_072701) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -59,10 +59,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_15_100229) do
     t.string "fname", null: false
     t.string "lname", null: false
     t.string "password", null: false
+    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
     t.enum "role", default: "user", enum_type: "user_role"
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["fname", "lname"], name: "index_users_on_fname_and_lname", opclass: :gist_trgm_ops, using: :gist
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "albums", "users", primary_key: "uid", on_delete: :cascade

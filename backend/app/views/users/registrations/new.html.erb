@@ -1,0 +1,79 @@
+<% content_for :head do %>
+  <%= stylesheet_link_tag "definition", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "signup", "data-turbo-track": "reload" %>
+<% end %>
+
+<%= render "users/shared/header", page: "signup" %>
+
+<main>
+  <h1>Fotobook Signup</h1>
+
+  <div class="container" id="icon-3rd">
+    <%=  render "users/shared/icon_group" %>
+  </div>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), class: "log-form") do |f| %>
+    
+    <div class="field mb-3">
+      <%= f.label :fname, "First name", class: "form-label" %>
+      <%= f.text_field :fname, autofocus: true, required: true, class: "form-control", placeholder: "Enter your first name" %>
+      <div class="text-danger d-flex gap-1 text-error">
+        <% if resource.errors[:fname].any? %>
+          *
+          <%= resource.errors[:fname].join(",") %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="field mb-3">
+      <%= f.label :lname, "Last name", class: "form-label" %>
+      <%= f.text_field :lname, autofocus: true, required: true, class: "form-control", placeholder: "Enter your last name" %>
+      <div class="text-danger d-flex gap-1 text-error">
+        <% if resource.errors[:lname].any? %>
+          *
+          <%= resource.errors[:lname].join(",") %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="field mb-3">
+      <%= f.label :email, class: "form-label" %>
+      <%= f.email_field :email, autofocus: true, required: true, autocomplete: "email", class: "form-control", placeholder: "abcxyz@example.com" %>
+      <div class="text-danger d-flex gap-1 text-error">
+        <% if resource.errors[:email].any? %>
+          *
+          <%= resource.errors[:email].join(",") %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="field mb-1">
+      <%= f.label :password, class: "form-label" %>
+      <%= f.password_field :password, required: true, autocomplete: "new-password", class: "form-control" %>
+      <p class="text-secondary text-note">* Password must have the length at least 8, must include at least a digit (0-9), at least a lowercase character (a-z), at least a uppercase one (A-Z) and at least a special character ($, %, @, #, ...)</p>
+      <div class="text-danger d-flex gap-1 text-error"> 
+        <% if resource.errors[:password].any? %>
+          *
+          <%= resource.errors[:password].join(",") %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="field mb-5">
+      <%= f.label :password_confirmation, class: "form-label" %>
+      <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password", class: "form-control" %>
+      <% if resource.errors[:password_confirmation].any? %>
+        <div class="text-danger d-flex gap-1 text-error">
+          * Confirmed password doesn't match the password
+        </div>
+      <% end %>
+    </div>
+
+    <%= f.submit "Sign up", class: "btn btn-primary w-50 align-self-center mb-2" %>
+
+    <div class="d-flex gap-2 align-self-center">
+      You have had an account? <%= render "users/shared/links" %>
+    </div>
+  <% end %>
+</main>
+
+
