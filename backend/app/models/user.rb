@@ -19,7 +19,12 @@ class UserValidator < ActiveModel::Validator
 end
 
 class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
   self.primary_key = "uid"
+  alias_attribute :encrypted_password, :password
 
   validates_with UserValidator
   validates :fname, format: {with: /\A[A-Za-zÀ-ỹ]+\z/, message: "Invalid Name"}, unless: :fname.blank?
@@ -32,8 +37,6 @@ class User < ApplicationRecord
     message:"Password must have at least 8 characters, contains at least 1 downcase alphabet, 1 uppercase alphabet, 1 number and 1 special character"
   }, unless: :password.blank?
 
-  before_save :password_hashing
-
   after_validation -> (user) {
     if user.errors.any?
       user.errors.each do |e|
@@ -41,12 +44,6 @@ class User < ApplicationRecord
       end
     end
   }
-
-  private
-    def password_hashing
-      self.password = BCrypt::Password.create(self.password)
-      Rails.logger.info("> Password has been hashed!")
-    end
 
   enum :role, {
     user: "user",

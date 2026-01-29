@@ -1,0 +1,21 @@
+<% content_for :head do %>
+  <%= stylesheet_link_tag "definition", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "view", "data-turbo-track": "reload" %>
+<% end %>
+<%= render "users/shared/header", page: "home" %>
+<main>
+  <div class="container-fluid post-view mt-100">
+    <div class="sidebar">
+      <div class="page" id="feed">Feeds</div>
+      <div class="page disable" id="discover">Discover</div>
+    </div>
+    <div class="main">
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-primary fw-bold text-white btn-outline-primary" id="photo-tab">Photo</button>
+        <div style="height: 100%; width: 2px; background-color: aliceblue;"></div>
+        <button type="button" class="btn btn-white fw-bold text-primary btn-outline-secondary" id="album-tab">Album</button>
+      </div>
+      <div id="card-group"></div>
+    </div>
+  </div>
+</main>

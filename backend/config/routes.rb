@@ -10,17 +10,25 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   # Defines the root path route ("/")
   # root "posts#index"
+  shallow do
+    resources :albums do
+      resources :photos
+    end
 
-  # Authentication /auth
-  resources :users, only: [:show, :new] 
-  resources :albums, :photos 
-  resources  :auth, controller: :auth do
-    collection do
-      post :login
-      post :signup
+    resources :users, only: [:index, :new, :create, :show] do
+      resources :photos
     end
   end
 
-  resource :profile, controller: "users"
+  devise_for :users, path: 'auth', path_names: {
+    sign_up: 'register',
+    sign_in: "login", 
+    sign_out: "logout"
+  }
+  
+
+  root to: "home#index"
+
+  resource :profile, controller: "users", except: [:new, :create]
   resolve('User') {[:profile]}
 end
