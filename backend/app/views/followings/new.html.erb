@@ -1,0 +1,11 @@
+<% content_for :title, "New following" %>
+
+<h1>New following</h1>
+
+<%= render "form", following: @following %>
+
+<br>
+
+<div>
+  <%= link_to "Back to followings", followings_path %>
+</div>

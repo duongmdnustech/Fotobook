@@ -1,16 +1,22 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Photos" %>
-
-<h1>Photos</h1>
-
-<div id="photos">
+<div class="row w-100" id="photos-list"> 
   <% @photos.each do |photo| %>
-    <%= render photo %>
-    <p>
-      <%= link_to "Show this photo", photo %>
-    </p>
+    <div class="col-12 col-md-6 col-lg-4 justify-content-center mb-4 d-flex align-items-stretch"> 
+      <%= render photo %>
+    </div>
   <% end %>
 </div>
 
-<%= link_to "New photo", new_user_photo_path(@user) %>
+<div id="pagination">
+  <% if @pagy.next %>
+    <%= turbo_frame_tag "photos_page_#{@pagy.next}", 
+                        src: photos_path(
+                          page: @pagy.next, 
+                          type: params[:type],
+                          query: params[:query],
+                          format: :turbo_stream
+                        ), 
+                        loading: :lazy do %>
+      <div class="spinner-border text-primary" role="status"></div>
+    <% end %>
+  <% end %>
+</div>

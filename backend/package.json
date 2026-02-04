@@ -1,5 +1,6 @@
 {
   "name": "app",
+  "type": "module",
   "private": "true",
   "scripts": {
     "build:css:compile": "sass ./app/assets/stylesheets/application.bootstrap.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",
@@ -15,6 +16,7 @@
     "autoprefixer": "^10.4.23",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
+    "i18n-js": "^4.5.1",
     "nodemon": "^3.1.11",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
