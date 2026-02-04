@@ -1,0 +1,12 @@
+<% content_for :title, "Editing following" %>
+
+<h1>Editing following</h1>
+
+<%= render "form", following: @following %>
+
+<br>
+
+<div>
+  <%= link_to "Show this following", @following %> |
+  <%= link_to "Back to followings", followings_path %>
+</div>

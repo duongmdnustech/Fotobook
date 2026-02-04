@@ -11,7 +11,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    super
+    puts "================ HÀM CREATE ĐANG CHẠY ================"
+    super do |resource|
+      # Gọi Action Mailer tại đây
+      puts "--------------------------------"
+      puts "User registered: #{resource.email}"
+      puts "--------------------------------"
+      UserMailer.with(user: resource).new_user_email.deliver_later
+    end
   end
 
   # GET /resource/edit

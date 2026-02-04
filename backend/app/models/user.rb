@@ -45,6 +45,8 @@ class User < ApplicationRecord
     end
   }
 
+  # after_create :send_registration_email
+
   enum :role, {
     user: "user",
     admin: "admin"
@@ -53,12 +55,12 @@ class User < ApplicationRecord
   has_many :albums, -> {includes :photos}, dependent: :destroy
   has_many :photos, -> {order(public_at: :desc)}, dependent: :destroy
   has_many :public_albums, -> {where(status: true).order(public_at: :desc).limit(6)}, class_name: "Album"
-  has_many :public_photos, -> {where(status: true).order(public_at: :desc).limit(6)}, class_name: "Photo"
-
+  has_many :public_photos, -> {where(status: true).order(public_at: :desc)}, class_name: "Photo"
 
   # Following other users
   has_many :active_followings, class_name: "Following", foreign_key: "follower_id", dependent: :destroy
   has_many :followings, -> {select(:uid, :lname, :fname)}, class_name: "User", through: :active_followings, source: :following
+  has_many :following_photos, through: :followings, source: :public_photos
 
   # Followed by other users
   has_many  :passive_followers, class_name: "Following", foreign_key: "following_id", dependent: :destroy
@@ -68,5 +70,10 @@ class User < ApplicationRecord
   
   def self.user_with_public_details uid 
     select(:uid, :fname, :lname, :email).find(uid)
+  end
+
+  private
+  def send_registration_email
+    UserMailer.with(user: self).new_user_email.deliver_later
   end
 end

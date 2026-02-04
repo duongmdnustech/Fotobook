@@ -5,17 +5,16 @@
 <%= render "users/shared/header", page: "home" %>
 <main>
   <div class="container-fluid post-view mt-100">
-    <div class="sidebar">
-      <div class="page" id="feed">Feeds</div>
-      <div class="page disable" id="discover">Discover</div>
-    </div>
-    <div class="main">
-      <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-primary fw-bold text-white btn-outline-primary" id="photo-tab">Photo</button>
+    <%= render "home/side_bar" %>
+    <div class="main d-flex flex-column align-items-center w-100">
+      <div class="btn-group align-self-center justify-self-center" role="group" aria-label="Basic example">
+        <div class="btn btn-primary fw-bold text-white btn-outline-primary" id="photo-tab">Photo</div>
         <div style="height: 100%; width: 2px; background-color: aliceblue;"></div>
-        <button type="button" class="btn btn-white fw-bold text-primary btn-outline-secondary" id="album-tab">Album</button>
+        <div class="btn btn-white fw-bold text-primary btn-outline-secondary" id="album-tab">Album</div>
       </div>
-      <div id="card-group"></div>
+      <div id="card-group" class="w-100 mt-4">
+        <%= render template: "photos/index", photos: current_user.public_photos, locals: {type: "following"} %>
+      </div>
     </div>
   </div>
 </main>

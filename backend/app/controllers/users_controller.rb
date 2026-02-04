@@ -30,6 +30,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
+        UserMailer.with(user: @user).new_user_email.deliver_later
         format.html { redirect_to @user, notice: "User was successfully created." }
         format.json { render :show, status: :created, location: @user }
       else
@@ -80,7 +81,9 @@ class UsersController < ApplicationController
     def require_login
       unless user_signed_in?
         redirect_to "/auth/login"
+        return
       end
+
       if !params[:id]
         params[:id] = current_user.uid
       end

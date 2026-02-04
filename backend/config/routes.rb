@@ -1,3 +1,5 @@
+require "sidekiq/web" # require the web UI
+
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -10,6 +12,10 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   # Defines the root path route ("/")
   # root "posts#index"
+  mount Sidekiq::Web => "/sidekiq" # access it at http://localhost:3000/sidekiq
+
+  resources :photos, only: [:index, :show]
+
   shallow do
     resources :albums do
       resources :photos
@@ -24,6 +30,9 @@ Rails.application.routes.draw do
     sign_up: 'register',
     sign_in: "login", 
     sign_out: "logout"
+  },
+  controllers: {
+    registrations: 'users/registrations'
   }
   
 
@@ -31,4 +40,6 @@ Rails.application.routes.draw do
 
   resource :profile, controller: "users", except: [:new, :create]
   resolve('User') {[:profile]}
+
+  get 'test', to: "home#test_i18n"
 end

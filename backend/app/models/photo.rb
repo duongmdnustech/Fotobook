@@ -17,4 +17,11 @@ class Photo < ApplicationRecord
       errors.add(:user_id, "must match album owner #{Photo.count}")
     end
   end
+
+  scope :following_feed, ->(user) {
+    joins(user: :passive_followers)
+      .where(followings: { follower_id: user.uid })
+      .where(status: true)
+      .order(public_at: :desc)
+  }
 end

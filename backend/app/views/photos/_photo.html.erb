@@ -1,2 +1,26 @@
-<div id="<%= dom_id photo %>">
+<div class="card d-flex flex-row overflow-hidden h-100" style="max-width: 540px; width: 100%;" id="<%= dom_id photo %>">
+  <style>
+    .user-tab:hover {
+      cursor: pointer;
+    }
+  </style>
+  <%= image_tag photo.url, class: "card-img-left w-50 h-100", style: "object-fit: cover;", alt: photo.title if photo.url.present? %>
+  
+  <div class="card-body w-50">
+    <%# Xóa min-width ở đây để text tự xuống dòng thay vì đẩy tràn khung %>
+    <%= link_to user_path(photo.user.uid), class: "text-decoration-none position-relative z-5 " do %>
+      <div class="user-tab d-flex gap-2 align-items-center mb-4">
+        <%= render "users/shared/avatar" %>
+        <div class="small fw-bold text-primary truncate-1"><%= photo.user.lname + " " + photo.user.fname %></div>
+      </div>
+    <% end %>
+    <%= tag.h5 photo.title, class: "card-title text-truncate" %> 
+    <%= tag.p photo.description, class: "card-text mb-5" %>
+    <div class="position-absolute end-0 bottom-0 w-50">
+      <hr class="my-2 text-secondary opacity-25 w-100">
+      <div class="text-end me-2 mb-2">
+        <%= tag.span photo.public_at.strftime("%d/%m/%Y"), class: "small text-secondary" %>
+      </div>
+    </div>
+  </div>
 </div>

@@ -3,7 +3,31 @@ class PhotosController < ApplicationController
 
   # GET /photos or /photos.json
   def index
-    @photos = Photo.all
+    safe_keyword = params[:query] ? ActiveRecord::Base.sanitize_sql_like(params[:query]) : ""
+    puts safe_keyword
+    if params[:type] == "following" then
+      @pagy, @photos = pagy(:countless, current_user.following_photos.where("title LIKE ? OR description LIKE ?", "%#{safe_keyword}%", "%#{safe_keyword}%"), limit: 6)
+      
+      respond_to do |format|
+        format.html {render template: "home/index"}
+        format.turbo_stream 
+      end
+      return
+    elsif params[:type] == "discover" then
+      @pagy, @photos = pagy(:countless,Photo.all.where("title LIKE ? OR description LIKE ?", "%#{safe_keyword}%", "%#{safe_keyword}%").order(public_at: :desc), limit: 2)
+      respond_to do |format|
+        format.html {render template: "home/index"}
+        format.turbo_stream 
+      end
+      return
+    else 
+      @pagy, @photos = pagy(Photo.all, items: 12)
+      respond_to do |format|
+        format.html {render template: "home/index"}
+        format.turbo_stream 
+      end
+      return
+    end
   end
 
   # GET /photos/1 or /photos/1.json
