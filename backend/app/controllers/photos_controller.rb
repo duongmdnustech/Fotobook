@@ -5,8 +5,9 @@ class PhotosController < ApplicationController
   def index
     safe_keyword = params[:query] ? ActiveRecord::Base.sanitize_sql_like(params[:query]) : ""
     puts safe_keyword
+    @photos.reset if @photos
     if params[:type] == "following" then
-      @pagy, @photos = pagy(:countless, current_user.following_photos.where("title LIKE ? OR description LIKE ?", "%#{safe_keyword}%", "%#{safe_keyword}%"), limit: 6)
+      @pagy, @photos = pagy(:countless, current_user.following_photos.where("title LIKE ? OR description LIKE ?", "%#{safe_keyword}%", "%#{safe_keyword}%"), limit: 12)
       
       respond_to do |format|
         format.html {render template: "home/index"}
@@ -14,7 +15,7 @@ class PhotosController < ApplicationController
       end
       return
     elsif params[:type] == "discover" then
-      @pagy, @photos = pagy(:countless,Photo.all.where("title LIKE ? OR description LIKE ?", "%#{safe_keyword}%", "%#{safe_keyword}%").order(public_at: :desc), limit: 2)
+      @pagy, @photos = pagy(:countless,Photo.all.where("title LIKE ? OR description LIKE ?", "%#{safe_keyword}%", "%#{safe_keyword}%").order(public_at: :desc), limit: 12)
       respond_to do |format|
         format.html {render template: "home/index"}
         format.turbo_stream 

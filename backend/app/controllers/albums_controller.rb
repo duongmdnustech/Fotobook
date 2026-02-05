@@ -1,9 +1,24 @@
 class AlbumsController < ApplicationController
-  before_action :set_album, only: %i[ show edit update destroy ]
+  #before_action :set_album, only: %i[ show edit update destroy ]
 
   # GET /albums or /albums.json
   def index
-    @albums = Album.all
+    @albums.reset if @albums
+    if (params[:type] == "following")
+      @pagy, @albums = pagy(:countless, current_user.following_albums, limit: 6)
+      respond_to do |format|
+        format.html {render template: "home/index"}
+        format.turbo_stream 
+      end
+      return
+    else
+      @pagy, @albums = pagy(:countless, Album.all.where(status: true).order(public_at: :desc), limit: 6)
+      respond_to do |format|
+        format.html {render template: "home/index"}
+        format.turbo_stream 
+      end
+      return
+    end
   end
 
   # GET /albums/1 or /albums/1.json

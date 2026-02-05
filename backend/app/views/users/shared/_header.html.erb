@@ -47,7 +47,7 @@
         <div class="d-none d-lg-flex gap-2 align-items-center home">
           <%= link_to "/profile", class: "text-decoration-none text-white" do %>
             <div class="profile d-flex gap-2 align-items-center text-decoration-none">
-              <%= render "users/shared/avatar" %>
+              <%= render "users/shared/avatar", avatar: current_user.avatar %>
               <div class="text-decoration-none"><%= current_user.fname + " " + current_user.lname %></div>
             </div>
           <% end %>
@@ -55,7 +55,7 @@
         </div>
         <div class="d-flex d-lg-none">
           <div class="profile d-flex gap-2 align-items-center text-decoration-none">
-            <%= render "users/shared/avatar" %>
+            <%= render "users/shared/avatar", avatar: current_user.avatar %>
           </div>
         </div>
       </div>

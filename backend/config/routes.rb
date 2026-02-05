@@ -35,6 +35,8 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
   
+  post 'follow/:id', to: 'followings#create', as: 'follow_user'
+  delete 'unfollow/:id', to: 'followings#destroy', as: 'unfollow_user'
 
   root to: "home#index"
 

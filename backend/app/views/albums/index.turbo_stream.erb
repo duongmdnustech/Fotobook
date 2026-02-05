@@ -1,0 +1,25 @@
+<%# 1. Nối thêm các card ảnh mới vào container %>
+<%= turbo_stream.append "albums-list" do %>
+  <% if @albums && @albums.any? %>
+    <% @albums.each do |album| %>
+      <div class="col-12 col-md-6 col-lg-4 justify-content-center mb-4 d-flex align-items-stretch"> 
+        <%= render album %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%# 2. Thay thế cái pagination cũ bằng cái mới (hoặc xóa sạch nếu hết trang) %>
+<%= turbo_stream.replace "pagination" do %>
+  <div id="pagination">
+    <% if @pagy.next %>
+      <%= turbo_frame_tag "albums_page_#{@pagy.next}", 
+                          src: albums_path(page: @pagy.next, type: params[:type], query: params[:query], format: :turbo_stream), 
+                          loading: :lazy do %>
+        <div class="text-center p-4">
+           <div class="spinner-border text-primary" role="status"></div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

@@ -7,11 +7,8 @@ class UserMailer < ApplicationMailer
   default from: "noreply@fotobook.com"
   #Ex:- :default =>''
   def new_user_email
-    @user = params[:user]
+    @user = User.find_by(uid: params[:user_id])
     send_mail = @user ? @user.email : "mock@example.com"
-    puts "--------------------------------"
-    puts "Sending email to #{send_mail}"
-    puts "--------------------------------"
     mail from: "no-reply@fotobook.com", to: send_mail, subject: "Welcome to Fotobook!"
   end
 end

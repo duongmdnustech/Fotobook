@@ -8,6 +8,10 @@ gem 'bootstrap', '~> 5.3'
 #gem 'sassc-rails' # Rails 7 thường cần gem này để biên dịch scss
 gem 'pagy'
 gem 'rails-i18n'
+
+# file uploader
+gem 'carrierwave', '~> 3.0'
+gem 'cloudinary'
 group :development, :test do
   gem 'rspec-rails', '~> 8.0.0'
 end

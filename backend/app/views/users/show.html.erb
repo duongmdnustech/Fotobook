@@ -1,14 +1,11 @@
 <p style="color: green"><%= notice %></p>
+<% content_for :head do %>
+  <%= stylesheet_link_tag "definition", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "view", "data-turbo-track": "reload" %>
+<% end %>
+<%= render "users/shared/header", user: @user, page: "profile" %>
 
-<%= @user.email %>
-
-<div>
-  <% if current_user.uid === @user.uid then %>
-    <%= link_to "Edit this user", edit_profile_path(@user) %> |
-  <% end %>
-  <%= link_to "Back to users", users_path %>
-  <% if current_user.uid === @user.uid then %>
-    <%= button_to "Destroy this user", @user, method: :delete %>
-  <% end %>
-</div>
-<%# render template: 'photos/index' %>
+<main>
+  <%= render "home/side_bar", page: "profile" %>
+  <%= render "users/shared/profile", user: @user ? @user : current_user, page: @user ? "user" : "profile" %>
+</main>

@@ -1,16 +1,22 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Albums" %>
-
-<h1>Albums</h1>
-
-<div id="albums">
+<div class="row w-100" id="albums-list"> 
   <% @albums.each do |album| %>
-    <%= render album %>
-    <p>
-      <%= link_to "Show this album", album %>
-    </p>
+    <div class="col-12 col-md-6 col-lg-4 justify-content-center mb-4 d-flex align-items-stretch"> 
+      <%= render album %>
+    </div>
   <% end %>
 </div>
 
-<%= link_to "New album", new_album_path %>
+<div id="pagination">
+  <% if @pagy.next %>
+    <%= turbo_frame_tag "albums_page_#{@pagy.next}", 
+                        src: albums_path(
+                          page: @pagy.next, 
+                          type: params[:type],
+                          query: params[:query],
+                          format: :turbo_stream
+                        ), 
+                        loading: :lazy do %>
+      <div class="spinner-border text-primary" role="status"></div>
+    <% end %>
+  <% end %>
+</div>

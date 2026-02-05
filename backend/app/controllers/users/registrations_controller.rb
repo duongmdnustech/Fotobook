@@ -11,13 +11,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    puts "================ HÀM CREATE ĐANG CHẠY ================"
     super do |resource|
-      # Gọi Action Mailer tại đây
-      puts "--------------------------------"
-      puts "User registered: #{resource.email}"
-      puts "--------------------------------"
-      UserMailer.with(user: resource).new_user_email.deliver_later
+      UserMailer.with(user_id: resource.uid).new_user_email.deliver_now
     end
   end
 
@@ -49,7 +44,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:lname, :fname, :email, :password])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:lname, :fname, :email, :password, :avatar])
   end
 
   # If you have extra params to permit, append them to the sanitizer.

@@ -4,22 +4,58 @@
       cursor: pointer;
     }
   </style>
-  <%= image_tag photo.url, class: "card-img-left w-50 h-100", style: "object-fit: cover;", alt: photo.title if photo.url.present? %>
+  <%= image_tag photo.url, 
+      class: "card-img-left w-50 h-100", 
+      style: "object-fit: cover; cursor: pointer;", 
+      alt: photo.title,
+      data: { 
+        bs_toggle: "modal", 
+        bs_target: "#photoModal-#{photo.photo_id}" 
+      } if photo.url.present? %>
   
   <div class="card-body w-50">
     <%# Xóa min-width ở đây để text tự xuống dòng thay vì đẩy tràn khung %>
-    <%= link_to user_path(photo.user.uid), class: "text-decoration-none position-relative z-5 " do %>
-      <div class="user-tab d-flex gap-2 align-items-center mb-4">
-        <%= render "users/shared/avatar" %>
+    
+    <div class="user-tab d-flex gap-2 align-items-center mb-4 position-relative z-5" data-controller="follow">
+      <%= link_to user_path(photo.user.uid), class: "text-decoration-none d-flex align-items-center gap-1" do %>
+        <%= render "users/shared/avatar", avatar: photo.user.avatar %>
         <div class="small fw-bold text-primary truncate-1"><%= photo.user.lname + " " + photo.user.fname %></div>
-      </div>
-    <% end %>
+      <% end %>
+      <% if params[:type] == 'discover' %>
+        <% if current_user.active_followings.pluck(:following_id).include?(photo.user.id) %>
+          <button type="button" class="btn btn-gradient position-absolute end-0 btn-ms ms-2" id="unfollow-[<%= photo.user.id %>]" style="font-weight: bold; font-size: 0.7rem;" data-action="follow#unfollow">Following</button>
+        <% else %>
+          <button type="button" class="btn btn-gradient-outline position-absolute end-0 btn-ms ms-2" id="follow-[<%= photo.user.id %>]" style="font-weight: bold; font-size: 0.7rem;" data-action="follow#follow">Follow</button>
+        <% end %>
+      <% end %>
+    </div>
+    
     <%= tag.h5 photo.title, class: "card-title text-truncate" %> 
     <%= tag.p photo.description, class: "card-text mb-5" %>
     <div class="position-absolute end-0 bottom-0 w-50">
       <hr class="my-2 text-secondary opacity-25 w-100">
       <div class="text-end me-2 mb-2">
         <%= tag.span photo.public_at.strftime("%d/%m/%Y"), class: "small text-secondary" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="photoModal-<%= photo.photo_id %>" tabindex="-1" aria-labelledby="photoModalLabel-<%= photo.photo_id %>" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold" id="photoModalLabel-<%= photo.photo_id %>"><%= photo.title %></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <img src="<%= photo.url %>" class="img-fluid rounded w-100 mb-3" alt="<%= photo.title %>">
+        
+        <p class="text-muted mb-0">
+          <%= photo.description %>
+        </p>
       </div>
     </div>
   </div>
