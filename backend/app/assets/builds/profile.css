@@ -1,0 +1,31 @@
+/* Container của Avatar */
+.avatar-wrapper {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  margin: 0 auto; /* Căn giữa */
+  border-radius: 50%;
+  overflow: hidden; /* Cắt ảnh thành hình tròn */
+  cursor: pointer;
+}
+
+/* Lớp phủ mờ đen khi hover hoặc luôn hiện */
+.avatar-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%; /* Chiếm 40% phía dưới */
+  background: rgba(0, 0, 0, 0.6); /* Màu đen mờ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s;
+}
+
+.avatar-text {
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}

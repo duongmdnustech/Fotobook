@@ -1,0 +1,72 @@
+/* Container chính */
+.photo-stack {
+  position: relative;
+  display: block;
+  width: 85%;
+  /* Bỏ margin: 0 auto ở đây, ta sẽ dùng class Bootstrap để linh hoạt hơn */
+  aspect-ratio: 1 / 1; 
+  /* Thêm transition nếu muốn hiệu ứng hover mượt */
+  transition: transform 0.3s ease;
+}
+
+/* Ảnh chính */
+.photo-stack img {
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Bóng đổ nhẹ */
+  border-radius: 4px;
+  background-color: #eee;
+}
+
+/* Lớp giả (Hiệu ứng xoay) */
+.photo-stack::before,
+.photo-stack::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border: 4px solid white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.photo-stack::before {
+  z-index: 1;
+  transform: rotate(4deg); /* Giảm góc xoay xíu cho gọn */
+}
+
+.photo-stack::after {
+  z-index: -1;
+  transform: rotate(8deg);
+}
+
+/* Đảm bảo Card là một khối chứa chuẩn */
+.custom-card {
+  overflow: hidden; /* Ngăn nội dung con tràn ra ngoài */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header phải có z-index cao hơn ảnh (20 > 10) */
+.card-overlay-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%); /* Làm tối nền text chút để dễ đọc */
+  z-index: 2; /* QUAN TRỌNG: Tăng lên 20 để đè lên ảnh */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Căn lề trên để icon edit không bị lệch */
+  color: white;
+  min-height: 60px; /* Đảm bảo vùng header đủ lớn */
+}

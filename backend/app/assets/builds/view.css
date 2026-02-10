@@ -1,0 +1,97 @@
+.post-view {
+  display: grid;
+  grid-template-areas: "sidebar main";
+  grid-template-columns: 10vw 1fr;
+  justify-self: center;
+  align-self: center;
+  justify-items: center;
+  margin-top: 50px;
+}
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.post-view .main {
+  grid-area: main;
+  align-self: center;
+  align-items: center;
+  justify-items: center;
+}
+
+#card-group {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.page {
+  font-weight: bold;
+  color: var(--color-blue-primary);
+}
+
+.page.disable {
+  font-weight: initial;
+  color: initial;
+}
+
+.page:hover {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Container chính */
+.photo-stack {
+  position: relative;
+  display: inline-block;
+  margin: 20px; /* Chừa khoảng trống cho các lớp xoay */
+  width: 100%;
+  height: calc(100% - 40px);
+}
+
+/* Ảnh chính (Lớp trên cùng) */
+.photo-stack img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: block;
+  /* Ảnh cover đầy khung bên trong viền */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+}
+
+/* Định nghĩa chung cho 2 lớp giả bên dưới */
+.photo-stack::before,
+.photo-stack::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Kích thước BẰNG CHÍNH XÁC với khung ảnh chính */
+  width: 100%;
+  height: 100%;
+  background-color: #f8f9fa;
+  border: 4px solid white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+
+/* Lớp thứ 2 (Xoay sang phải) */
+.photo-stack::before {
+  z-index: 5;
+  transform: rotate(5deg);
+  transform-origin: center center; /* Xoay quanh tâm */
+}
+
+/* Lớp thứ 3 (Xoay sang trái) */
+.photo-stack::after {
+  z-index: 4;
+  transform: rotate(-5deg);
+  transform-origin: center center; /* Xoay quanh tâm */
+}
