@@ -5,15 +5,30 @@
 <%= render "users/shared/header", page: "home" %>
 <main>
   <div class="container-fluid post-view mt-100">
-    <%= render "home/side_bar" %>
+    <%= render "home/side_bar", page: "home" %>
     <div class="main d-flex flex-column align-items-center w-100">
-      <div class="btn-group align-self-center justify-self-center" role="group" aria-label="Basic example">
-        <div class="btn btn-primary fw-bold text-white btn-outline-primary" id="photo-tab">Photo</div>
+      <div class="btn-group align-self-center justify-self-center" role="group" aria-label="Basic example" data-controller="home">
+        <% active_class = "btn btn-primary fw-bold text-white btn-outline-primary tab" %>
+        <% inactive_class = "btn btn-white fw-bold text-primary btn-outline-secondary tab" %>
+
+        <%= link_to "Photo", photos_path(type: params[:type]), 
+              class: (params[:controller] == "photos" ? active_class : inactive_class), 
+              id: "photo-tab", 
+              data: { action: "click->home#switch_tab" } %>
+
         <div style="height: 100%; width: 2px; background-color: aliceblue;"></div>
-        <div class="btn btn-white fw-bold text-primary btn-outline-secondary" id="album-tab">Album</div>
+
+        <%= link_to "Album", albums_path(type: params[:type]), 
+              class: (params[:controller] == "albums" ? active_class : inactive_class), 
+              id: "album-tab", 
+              data: { action: "click->home#switch_tab" } %>
       </div>
       <div id="card-group" class="w-100 mt-4">
-        <%= render template: "photos/index", photos: current_user.public_photos, locals: {type: "following"} %>
+        <% if params[:controller] == "photos" %>
+          <%= render template: "photos/index", photos: current_user.public_photos, locals: {type: params[:type] || "following"} %>
+        <% elsif params[:controller] == "albums" %>
+          <%= render template: "albums/index", albums: @albums, locals: {type: params[:type] || "following"} %>
+        <% end %>
       </div>
     </div>
   </div>

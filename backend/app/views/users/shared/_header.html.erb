@@ -11,7 +11,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <%= image_tag "logo.png" %>
-      Fotobook
+      Fotobook <%= user_signed_in? && current_user.role == "admin" ? "Admin" : "" %>
     </div>
 
     <%# Search bar %>
@@ -45,9 +45,9 @@
     <% else %>
       <div class="item">
         <div class="d-none d-lg-flex gap-2 align-items-center home">
-          <%= link_to "/profile", class: "text-decoration-none text-white" do %>
+          <%= link_to profile_path, class: "text-decoration-none text-white" do %>
             <div class="profile d-flex gap-2 align-items-center text-decoration-none">
-              <%= render "users/shared/avatar" %>
+              <%= render "users/shared/avatar", avatar: current_user.avatar, user: current_user %>
               <div class="text-decoration-none"><%= current_user.fname + " " + current_user.lname %></div>
             </div>
           <% end %>
@@ -55,7 +55,7 @@
         </div>
         <div class="d-flex d-lg-none">
           <div class="profile d-flex gap-2 align-items-center text-decoration-none">
-            <%= render "users/shared/avatar" %>
+            <%= render "users/shared/avatar", avatar: current_user.avatar, user: current_user %>
           </div>
         </div>
       </div>

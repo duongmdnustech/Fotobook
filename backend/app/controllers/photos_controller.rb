@@ -5,16 +5,16 @@ class PhotosController < ApplicationController
   def index
     safe_keyword = params[:query] ? ActiveRecord::Base.sanitize_sql_like(params[:query]) : ""
     puts safe_keyword
+    #@photos.reset if @photos
     if params[:type] == "following" then
-      @pagy, @photos = pagy(:countless, current_user.following_photos.where("title LIKE ? OR description LIKE ?", "%#{safe_keyword}%", "%#{safe_keyword}%"), limit: 6)
-      
+      @pagy, @photos = pagy(:countless, current_user.following_photos.where("title LIKE ? OR description LIKE ?", "%#{safe_keyword}%", "%#{safe_keyword}%"), limit: 12)
       respond_to do |format|
         format.html {render template: "home/index"}
         format.turbo_stream 
       end
       return
     elsif params[:type] == "discover" then
-      @pagy, @photos = pagy(:countless,Photo.all.where("title LIKE ? OR description LIKE ?", "%#{safe_keyword}%", "%#{safe_keyword}%").order(public_at: :desc), limit: 2)
+      @pagy, @photos = pagy(:countless,Photo.all.where("title LIKE ? OR description LIKE ?", "%#{safe_keyword}%", "%#{safe_keyword}%").order(public_at: :desc), limit: 12)
       respond_to do |format|
         format.html {render template: "home/index"}
         format.turbo_stream 
@@ -45,11 +45,11 @@ class PhotosController < ApplicationController
 
   # POST /photos or /photos.json
   def create
-    @photo = Photo.new(photo_params)
+    @photo = current_user.photos.build(photo_params)
 
     respond_to do |format|
       if @photo.save
-        format.html { redirect_to @photo, notice: "Photo was successfully created." }
+        format.html { redirect_to profile_path, notice: "Photo was successfully created." }
         format.json { render :show, status: :created, location: @photo }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -62,7 +62,7 @@ class PhotosController < ApplicationController
   def update
     respond_to do |format|
       if @photo.update(photo_params)
-        format.html { redirect_to @photo, notice: "Photo was successfully updated.", status: :see_other }
+        format.html { redirect_to profile_path, notice: "Photo was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @photo }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -76,7 +76,7 @@ class PhotosController < ApplicationController
     @photo.destroy!
 
     respond_to do |format|
-      format.html { redirect_to photos_path, notice: "Photo was successfully destroyed.", status: :see_other }
+      format.html { redirect_to profile_path, notice: "Photo was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
   end
@@ -89,6 +89,6 @@ class PhotosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def photo_params
-      params.fetch(:photo, {})
+      params.require(:photo).permit(:title, :description, :image, :status)
     end
 end

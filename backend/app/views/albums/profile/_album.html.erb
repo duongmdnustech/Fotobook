@@ -1,0 +1,90 @@
+<div class="d-flex flex-column align-items-center justify-content-center w-100 mb-4" style="width: 250px;"> 
+  <% if album.user == current_user %>
+  <a class="text-decoration-none container px-2 position-relative" style="cursor: pointer;" href="/albums/<%= album.id %>/edit">
+  <% else %>
+  <div class="container px-2 position-relative" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#albumModal-<%= album.album_id %>">
+  <% end %>
+    <div class="photo-stack border shadow">
+      <% f_photo = album.photos.first %>
+      <%= image_tag (f_photo&.url || "https://placehold.co/400"), 
+            class: "w-100 h-100",
+            alt: "Photo"
+      %>
+    </div>
+
+    <div class="position-absolute top-50 start-50 translate-middle" style="z-index: 20;">
+      <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center shadow w-auto h-auto flex-column p-3" 
+          style="aspect-ratio: 1 / 1; 
+                  font-weight: bold; 
+                  font-size: 1.1rem; 
+                  border: 2px solid white;
+                  opacity: 0.8;"> 
+        <div>
+          <%= (album.user == current_user) ? album.photos.size : album.public_photos.size %>
+        </div>
+        <div>Photos</div>
+      </div>
+    </div>
+
+    <% if !album.status %>
+      <div class="position-absolute top-0 end-0 m-1 pe-3 pt-1" style="z-index: 20;">
+        <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" 
+            style="width: 40px; height: 40px; border: 2px solid white;">
+          <i class="bi bi-lock-fill" style="font-size: 0.8rem;"></i>
+        </div>
+      </div>
+    <% end %>
+  <% if album.user == current_user %>
+  </a>
+  <% else %>
+  </div>
+  <% end %>
+
+  <div class="mt-3 text-center text-muted small fw-semibold">
+    <%= album.title %>
+  </div>
+</div>
+
+<div class="modal fade" id="albumModal-<%= album.album_id %>" tabindex="-1" aria-labelledby="albumModalLabel-<%= album.album_id %>" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold text-primary" id="albumModalLabel-<%= album.album_id %>"><%= album.title %></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        
+        <div id="carouselAlbum-<%= album.album_id %>" class="carousel slide mb-3" data-bs-interval="false">
+          
+          <div class="carousel-inner rounded">
+            <% album.public_photos.each_with_index do |photo, index| %>
+              <div class="carousel-item <%= 'active' if index == 0 %>">
+                <h6 class="fw-bold text-secondary"><%= photo.title %></h6>
+                <img src="<%= photo.url %>" class="d-block w-100 rounded" alt="Photo <%= index + 1 %>" style="object-fit: cover; max-height: 500px;">
+                <p class="text-muted mb-0">
+                    <%= photo.description %>
+                </p>
+              </div>
+            <% end %>
+          </div>
+
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselAlbum-<%= album.album_id %>" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselAlbum-<%= album.album_id %>" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+        <p class="text-muted mb-0 text-primary-emphasis">
+          <%= album.description %>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>

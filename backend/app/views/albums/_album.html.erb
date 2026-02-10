@@ -1,2 +1,82 @@
-<div id="<%= dom_id album %>">
+<div class="card d-flex flex-row overflow-hidden h-100" style="max-width: 540px; width: 100%;" id="<%= dom_id album %>">
+  <style>
+    .user-tab:hover {
+      cursor: pointer;
+    }
+  </style>
+  <div class="photo-stack card-img-left w-50" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#albumModal-<%= album.album_id %>">
+    <% f_photo = album.public_photos.first %>
+    <%= image_tag f_photo.url, class: "card-img-left w-100 h-100", style: "object-fit: cover;", alt: album.title if f_photo && f_photo.url.present? %>
+  </div>
+  
+  <div class="card-body w-50">
+    <%# Xóa min-width ở đây để text tự xuống dòng thay vì đẩy tràn khung %>
+    <div class="user-tab d-flex gap-2 align-items-center justify-content-between mb-4" data-controller="follow">
+      <%= link_to user_albums_path(album.user), class: "text-decoration-none d-flex align-items-center gap-2 overflow-hidden" do %>
+        <%= render "users/shared/avatar", avatar: album.user.avatar, user: album.user %>
+        <div class="small fw-bold text-primary"><%= album.user.lname + " " + album.user.fname %></div>
+      <% end %>
+      <% if params[:type] == 'discover' && current_user != album.user %>
+        <div class="flex-shrink-0 ms-2">
+          <% if current_user.active_followings.pluck(:following_id).include?(album.user.id) %>
+            <button type="button" class="btn btn-gradient btn-ms" id="unfollow-[<%= album.user.id %>]" style="font-weight: bold; font-size: 0.7rem;" data-action="follow#unfollow">Following</button>
+          <% else %>
+            <button type="button" class="btn btn-gradient-outline btn-ms" id="follow-[<%= album.user.id %>]" style="font-weight: bold; font-size: 0.7rem;" data-action="follow#follow">Follow</button>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <%= tag.h5 album.title, class: "card-title text-truncate" %> 
+    <%= tag.p album.description, class: "card-text mb-5" %>
+    <div class="position-absolute end-0 bottom-0 w-50">
+      <hr class="my-2 text-secondary opacity-25 w-100">
+      <div class="text-end me-2 mb-2">
+        <%= tag.span album && album.public_at ? album.public_at.strftime("%d/%m/%Y") : Time.current, class: "small text-secondary" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="albumModal-<%= album.album_id %>" tabindex="-1" aria-labelledby="albumModalLabel-<%= album.album_id %>" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold text-primary" id="albumModalLabel-<%= album.album_id %>"><%= album.title %></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        
+        <div id="carouselAlbum-<%= album.album_id %>" class="carousel slide mb-3" data-bs-interval="false">
+          
+          <div class="carousel-inner rounded">
+            <% album.public_photos.each_with_index do |photo, index| %>
+              <div class="carousel-item <%= 'active' if index == 0 %>">
+                <h6 class="fw-bold text-secondary"><%= photo.title %></h6>
+                <img src="<%= photo.url %>" class="d-block w-100 rounded" alt="Photo <%= index + 1 %>" style="object-fit: cover; max-height: 500px;">
+                <p class="text-muted mb-0">
+                    <%= photo.description %>
+                </p>
+              </div>
+            <% end %>
+          </div>
+
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselAlbum-<%= album.album_id %>" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselAlbum-<%= album.album_id %>" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+        <p class="text-muted mb-0 text-primary-emphasis">
+          <%= album.description %>
+        </p>
+      </div>
+
+    </div>
+  </div>
 </div>

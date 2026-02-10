@@ -1,12 +1,15 @@
-<% content_for :title, "Editing user" %>
+<% content_for :head do %>
+  <%= stylesheet_link_tag "definition", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "view", "data-turbo-track": "reload" %>
+<% end %>
+<%= render "users/shared/header", user: @user, page: "edit_profile" %>
 
-<h1>Editing user</h1>
-
-<%#= render "form", user: @user %>
-
-<br>
-
-<div>
-  <%= link_to "Show this user", @user %> |
-  <%= link_to "Back to users", users_path %>
-</div>
+<main>
+  <div class="container-fluid post-view mt-100">
+    <%= render "home/side_bar", page: "edit_profile" %>
+    <div class="w-100 rounded shadow p-4 me-3">
+      <h2 class="fw-bold border-bottom pb-3 mb-3">Edit User Profile</h2>
+      <%= render template: "users/registrations/edit", user: current_user %>
+    </div>
+  </div>
+</main>

@@ -3,7 +3,22 @@ class AlbumsController < ApplicationController
 
   # GET /albums or /albums.json
   def index
-    @albums = Album.all
+    @albums.reset if @albums
+    if (params[:type] == "following")
+      @pagy, @albums = pagy(:countless, current_user.following_albums, limit: 6)
+      respond_to do |format|
+        format.html {render template: "home/index"}
+        format.turbo_stream 
+      end
+      return
+    else
+      @pagy, @albums = pagy(:countless, Album.all.where(status: true).order(public_at: :desc), limit: 6)
+      respond_to do |format|
+        format.html {render template: "home/index"}
+        format.turbo_stream 
+      end
+      return
+    end
   end
 
   # GET /albums/1 or /albums/1.json
@@ -12,7 +27,8 @@ class AlbumsController < ApplicationController
 
   # GET /albums/new
   def new
-    @album = Album.new
+    @album = current_user.albums.build
+    @album.photos.build
   end
 
   # GET /albums/1/edit
@@ -21,11 +37,11 @@ class AlbumsController < ApplicationController
 
   # POST /albums or /albums.json
   def create
-    @album = Album.new(album_params)
-
+    @album = current_user.albums.build(album_params)
+    @album.public_at = Time.current
     respond_to do |format|
       if @album.save
-        format.html { redirect_to @album, notice: "Album was successfully created." }
+        format.html { redirect_to albums_profile_path, notice: "Album was successfully created." }
         format.json { render :show, status: :created, location: @album }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -36,9 +52,27 @@ class AlbumsController < ApplicationController
 
   # PATCH/PUT /albums/1 or /albums/1.json
   def update
+    safe_params = album_params
+    if safe_params[:photo_ids].present? && safe_params[:photos_attributes].present?
+      
+      # Lấy danh sách các ID đang được tick chọn (chuyển về string để so sánh)
+      # reject(&:blank?) để loại bỏ các giá trị rỗng "" do Rails sinh ra
+      selected_ids = safe_params[:photo_ids].reject(&:blank?).map(&:to_s)
+
+      # Lọc photos_attributes:
+      # Giữ lại item nếu:
+      # - Là ảnh mới upload (chưa có ID)
+      # - HOẶC ID của nó nằm trong danh sách được tick chọn (selected_ids)
+      safe_params[:photos_attributes].select! do |_key, attributes|
+        attributes[:id].nil? || selected_ids.include?(attributes[:id].to_s)
+      end
+    end
+
+    # 3. Update album với params đã được làm sạch
     respond_to do |format|
-      if @album.update(album_params)
-        format.html { redirect_to @album, notice: "Album was successfully updated.", status: :see_other }
+      if @album.update(safe_params)
+        # Sửa đường dẫn redirect tùy theo ý bạn (ví dụ: albums_path hoặc @album)
+        format.html { redirect_to edit_album_path, notice: "Album was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @album }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,7 +86,7 @@ class AlbumsController < ApplicationController
     @album.destroy!
 
     respond_to do |format|
-      format.html { redirect_to albums_path, notice: "Album was successfully destroyed.", status: :see_other }
+      format.html { redirect_to albums_profile_path, notice: "Album was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
   end
@@ -65,6 +99,13 @@ class AlbumsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def album_params
-      params.fetch(:album, {})
+      params.fetch(:album, {}).permit(
+        :title, 
+        :status, 
+        :description, 
+        photo_ids: [], 
+        # SỬA: Đổi thành số nhiều (photos_) và liệt kê các cột bên trong
+        photos_attributes: [:id, :title, :status, :image, :_destroy] 
+      )
     end
 end

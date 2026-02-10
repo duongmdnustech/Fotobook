@@ -1,31 +1,52 @@
 <div data-controller="home" class="me-4">
   <div class="sidebar d-none d-md-flex flex-column gap-2 p-3">
     <%# 1. Nút Feeds (Following) %>
-    <%= link_to "Feeds", 
-        photos_path(type: "following"), 
-        class: "text-decoration-none page #{'disable' unless params[:type] == 'following'}", 
-        id: "feed",
-        data: { 
-          action: "click->home#switch_page" # Giữ lại action để đổi màu ngay lập tức
-        } 
-    %>
+    <% if page == "home" %>
+      <%= link_to "Feeds", 
+          photos_path(type: "following"), 
+          class: "text-decoration-none page fw-bold #{'disable' unless params[:type] == 'following'}", 
+          id: "feed",
+          data: { 
+            action: "click->home#switch_page:prevent" # Giữ lại action để đổi màu ngay lập tức
+          } 
+      %>
 
-    <%# 2. Nút Discover (All) - Mặc định active nếu không có params hoặc params là discover %>
-    <%= link_to "Discover", 
-        photos_path(type: "discover"), 
-        class: "text-decoration-none page #{'disable' if params[:type] == 'following'}", 
-        id: "discover",
-        data: { 
-          action: "click->home#switch_page" 
-        } 
-    %>
+      <%# 2. Nút Discover (All) - Mặc định active nếu không có params hoặc params là discover %>
+      <%= link_to "Discover", 
+          photos_path(type: "discover"), 
+          class: "text-decoration-none page fw-bold #{'disable' if params[:type] == 'following'}", 
+          id: "discover",
+          data: { 
+            action: "click->home#switch_page:prevent" 
+          } 
+      %>
+    <% else %>
+      <%= link_to "Feeds", 
+          photos_path(type: "following"), 
+          class: "text-decoration-none page fw-bold #{'disable' unless params[:type] == 'following'}", 
+          id: "feed",
+          data: { 
+            action: "click->home#switch_page" # Giữ lại action để đổi màu ngay lập tức
+          } 
+      %>
+
+      <%# 2. Nút Discover (All) - Mặc định active nếu không có params hoặc params là discover %>
+      <%= link_to "Discover", 
+          photos_path(type: "discover"), 
+          class: "text-decoration-none page fw-bold #{'disable' unless params[:type] == 'discover'}", 
+          id: "discover",
+          data: { 
+            action: "click->home#switch_page" 
+          } 
+      %>
+    <% end %>
   </div>
 
   <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
     <div class="offcanvas-header">
       <%= link_to "/profile", class: "text-decoration-none w-100" do %>
         <div class="d-flex gap-4 align-items-center shadow p-3 mb-2 bg-body-tertiary rounded w-100 profile">
-          <%= render "users/shared/avatar" %>
+          <%= render "users/shared/avatar", avatar: current_user.avatar, user: current_user %>
           <%= current_user.fname + " " + current_user.lname%>
           <div class="align-self-end me-5">
             <svg width="40px" height="40px" viewBox="-4.56 -4.56 33.12 33.12" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)" stroke="#878787">

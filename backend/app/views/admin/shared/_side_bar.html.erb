@@ -1,0 +1,74 @@
+<div data-controller="home" class="me-5">
+  <div class="sidebar d-none d-md-flex flex-column gap-2 p-3 ms-5">
+    <%# 1. Nút Feeds (Following) %>
+    <%= link_to "Manage Photos", 
+        admin_photos_path, 
+        class: "text-decoration-none text-nowrap mb-2 page fw-bold #{'disable' unless request.path.include?('photos')}",
+        id: "photo"
+    %>
+
+    <%# 2. Nút Discover (All) - Mặc định active nếu không có params hoặc params là discover %>
+    <%= link_to "Manage Albums", 
+        admin_albums_path, 
+        class: "text-decoration-none text-nowrap mb-2 page fw-bold #{'disable' unless request.path.include? 'albums'}",
+        id: "album"
+    %>
+
+    <%= link_to "Manage Users", 
+        admin_users_path, 
+        class: "text-decoration-none text-nowrap page fw-bold #{'disable' unless request.path.include? 'users'}",
+        id: "user"
+    %>
+  </div>
+
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+    <div class="offcanvas-header">
+      <%= link_to "/profile", class: "text-decoration-none w-100" do %>
+        <div class="d-flex gap-4 align-items-center shadow p-3 mb-2 bg-body-tertiary rounded w-100 profile">
+          <%= render "users/shared/avatar", avatar: current_user.avatar, user: current_user %>
+          <%= current_user.fname + " " + current_user.lname%>
+          <div class="align-self-end me-5">
+            <svg width="40px" height="40px" viewBox="-4.56 -4.56 33.12 33.12" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)" stroke="#878787">
+              <g id="SVGRepo_bgCarrier" stroke-width="0">
+                <path transform="translate(-4.56, -4.56), scale(1.035)" d="M16,27.46089913589614C18.811365246704646,27.7070380366006,21.320153118061192,30.764777999034166,23.980146473007544,29.822019143090643C26.533740437565893,28.916970519531258,26.980443053067845,25.467572973933507,28.300114059396243,23.101474163255524C29.599883537163493,20.771057717980284,31.471054391248927,18.65944148328939,31.689257280102797,16C31.91394412966596,13.261532459004005,31.048330963669844,10.477927641786899,29.52339049748421,8.192266855921067C28.041123560103202,5.9705673941502155,25.658152295706685,4.60581753238459,23.278423405119355,3.3934008633348114C20.990249869370018,2.227629523837237,18.565678322971717,1.1926146885336404,16.000000000000004,1.3024130889347632C13.48114767252229,1.4102075672711454,11.009336288396248,2.387285081339939,9.072571224932164,4.0013413957678665C7.2679124794073156,5.505303284873875,6.917193850228087,8.052354201525294,5.581556529981754,9.984908858048058C4.097651917700656,12.131993792579944,0.8771933112224217,13.39183988980499,0.77999529668263,15.999999999999996C0.6835696755869307,18.5874341130664,3.7260304509144517,20.099819033543582,5.1233707080936846,22.27962484955787C6.4433289319481375,24.3387171847791,6.579689959720637,27.440038542665317,8.78779371082782,28.491907727513993C11.018248139063367,29.55442405180077,13.538814072223348,27.245418917023006,16,27.46089913589614" fill="#7ed0ec" strokewidth="0"></path>
+              </g>
+              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.384"></g>
+              <g id="SVGRepo_iconCarrier"> 
+                <path d="M13 15L16 12M16 12L13 9M16 12H8M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#707070" stroke-width="1.9440000000000002" stroke-linecap="round" stroke-linejoin="round"></path> 
+              </g>
+            </svg>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="offcanvas-body">
+      <form class="d-flex mb-2" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+      <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+        <li class="nav-item">
+          <%= link_to "Feeds", 
+              photos_path(type: "following"), 
+              class: "text-decoration-none page #{'disable' unless params[:type] == 'following'}", 
+              id: "feed",
+              data: { 
+                action: "click->home#switch_page" # Giữ lại action để đổi màu ngay lập tức
+              } 
+          %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Discover", 
+              photos_path(type: "discover"), 
+              class: "text-decoration-none page #{'disable' if params[:type] == 'following'}", 
+              id: "discover",
+              data: { 
+                action: "click->home#switch_page" 
+              } 
+          %>
+        </li>
+      </ul>
+      <%= link_to "Logout", destroy_user_session_path, data: {turbo_method: :delete}, class: "text-decoration-none btn btn-danger shadow p-2 mb-3 ms-3 rounded logout position-absolute bottom-0 start-0" %>
+    </div>
+  </div>
+</div>

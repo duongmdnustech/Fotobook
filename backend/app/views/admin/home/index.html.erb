@@ -1,0 +1,22 @@
+<% content_for :head do %>
+  <%= stylesheet_link_tag "definition", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "view", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "custom-card", "data-turbo-track": "reload" %>
+<% end %>
+<%= render "users/shared/header", page: "home" %>
+<main>
+  <div class="container-fluid post-view mt-100">
+    <%= render "admin/shared/side_bar", page: "admin" %>
+    <div class="main d-flex flex-column align-items-center w-100">
+      <div id="card-group" class="w-100 mt-4">
+        <% if request.path.include? "photos" %>
+          <%= render template: "admin/photos/index" %>
+        <% elsif request.path.include? 'albums' %>
+          <%= render template: "admin/albums/index" %>
+        <% else %>
+          <%= render template: "admin/users/index" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</main>

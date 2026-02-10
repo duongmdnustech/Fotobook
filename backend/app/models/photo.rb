@@ -1,12 +1,17 @@
 class Photo < ApplicationRecord
   self.primary_key = "photo_id"
-  validates :title, presence: true
+
+  mount_uploader :image, PhotoUploader
+
+  validates :title, presence: true, on: [:create, :update]
   validates :status, inclusion: {in: [true, false]}
 
   belongs_to :user
   belongs_to :album, foreign_key: "album_id", optional: true
 
   validate :user_matches_album
+
+  before_save :save_photo_url
 
   def user_matches_album
     if !album
@@ -24,4 +29,9 @@ class Photo < ApplicationRecord
       .where(status: true)
       .order(public_at: :desc)
   }
+
+  private 
+  def save_photo_url
+    self.url = self.image.url
+  end
 end

@@ -1,5 +1,5 @@
 class FollowingsController < ApplicationController
-  before_action :set_following, only: %i[ show edit update destroy ]
+  # before_action :set_following, only: %i[ show edit update destroy ]
 
   # GET /followings or /followings.json
   def index
@@ -21,16 +21,12 @@ class FollowingsController < ApplicationController
 
   # POST /followings or /followings.json
   def create
-    @following = Following.new(following_params)
-
-    respond_to do |format|
-      if @following.save
-        format.html { redirect_to @following, notice: "Following was successfully created." }
-        format.json { render :show, status: :created, location: @following }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @following.errors, status: :unprocessable_entity }
-      end
+    @following = Following.new(follower_id: current_user.uid, following_id: params[:id])
+    puts @following.inspect
+    if @following.save
+      render json: { status: 'success' }, status: :created
+    else
+      render json: { status: 'error', errors: @following.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -49,12 +45,10 @@ class FollowingsController < ApplicationController
 
   # DELETE /followings/1 or /followings/1.json
   def destroy
+    @following = Following.find_by(follower_id: current_user.uid, following_id: params[:id])
     @following.destroy!
 
-    respond_to do |format|
-      format.html { redirect_to followings_path, notice: "Following was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+    render json: { status: 'success' }, status: :ok
   end
 
   private
