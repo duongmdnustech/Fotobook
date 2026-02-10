@@ -1,52 +1,158 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
-
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "users/shared/error_messages", resource: resource %>
-
-  <div class="field">
-    <p><%= f.label :lname %></p>
-    <p><%= f.text_field :lname, autofocus: true %></p>
-  </div>
-
-  <div class="field">
-    <p><%= f.label :fname %></p>
-    <p><%= f.text_field :fname, autofocus: true %></p>
-  </div>
-
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
-
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
-
-  <div class="field">
-    <p><%= f.label :password %> <i>(leave blank if you don't want to change it)</i></p>
-    <p><%= f.password_field :password, autocomplete: "new-password" %></p>
-    <% if @minimum_password_length %>
-      <p><em><%= @minimum_password_length %> characters minimum</em></p>
-    <% end %>
-  </div>
-
-  <div class="field">
-    <p><%= f.label :password_confirmation %></p>
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
-  </div>
-
-  <div class="field">
-    <p><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i></p>
-    <p><%= f.password_field :current_password, autocomplete: "current-password" %></p>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Update" %>
-  </div>
+<% content_for :head do %>
+  <%= stylesheet_link_tag "definition", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "profile", "data-turbo-track": "reload" %>
 <% end %>
 
-<h3>Cancel my account</h3>
+<div class="container mt-5 mb-5" style="max-width: 700px;">
+  
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true }) do |form| %>
+    <% has_image = resource.avatar.present? %>
+    <%# Lưu URL gốc nếu có, nếu không thì để trống %>
+    <% original_url = has_image ? resource.avatar.url : "" %>
 
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
+    <div class="text-center mb-2" data-controller="form">
+      
+      <%= form.check_box :remove_avatar, class: "d-none", data: { form_target: "removeInput" } %>
 
-<%= link_to "Back", :back %>
+      <%# Thêm kích thước cụ thể (ví dụ 150px) để căn giữa chuẩn hơn %>
+      <%= form.label :avatar, class: "avatar-wrapper shadow-sm position-relative d-inline-block overflow-hidden rounded-circle", 
+          style: "cursor: pointer; width: 150px; height: 150px; background-color: #f8f9fa;" do %>
+        
+        <%# --- 1. PLACEHOLDER (Dấu +) --- %>
+        <%# Hiện khi KHÔNG có ảnh %>
+        <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center text-secondary <%= 'd-none' if has_image %>"
+            data-form-target="placeholder">
+          <span style="font-size: 3rem; line-height: 1; font-weight: 300;">+</span>
+          <small class="text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px;">Upload</small>
+        </div>
+
+        <%# --- 2. ẢNH AVATAR --- %>
+        <%# Hiện khi CÓ ảnh %>
+        <%= image_tag original_url, 
+            class: "w-100 h-100 object-fit-cover #{'d-none' unless has_image}", 
+            id: "avatar-preview",
+            data: { 
+              form_target: "avatar",
+              original_url: original_url 
+            } %>
+
+        <%# Overlay hiệu ứng hover (Giữ nguyên của bạn) %>
+        <div class="avatar-overlay">
+          <span class="avatar-text">Change</span>
+        </div>
+
+        <%= form.file_field :avatar, class: "d-none", accept: "image/*", 
+            data: {
+              form_target: "input",
+              action: "change->form#previewAvatar"
+            } %>
+      <% end %>
+
+      <%# --- CÁC NÚT CHỨC NĂNG --- %>
+      <div class="mt-2 mb-5">
+        <button type="button" 
+                class="btn btn-sm btn-danger <%= 'd-none' unless has_image %>"
+                data-form-target="removeButton"
+                data-action="click->form#remove">
+          <i class="fas fa-trash"></i> Remove
+        </button>
+
+        <button type="button" 
+                class="btn btn-sm btn-secondary d-none"
+                data-form-target="undoButton"
+                data-action="click->form#undo">
+          <i class="fas fa-undo"></i> Undo
+        </button>
+      </div>
+    </div>
+
+    <%= form.hidden_field :role, value: resource.role, class: "form-control" %>
+    <%# --- PHẦN 2: BASIC INFORMATION --- %>
+    <h5 class="text-primary fw-bold mb-3 border-bottom pb-2">Basic Information</h5>
+    
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-3 text-md-end">
+        <%= form.label :fname, "First Name", class: "col-form-label fw-bold text-secondary" %>
+      </div>
+      <div class="col-md-9">
+        <%= form.text_field :fname, class: "form-control", placeholder: "First Name" %>
+      </div>
+    </div>
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-3 text-md-end">
+        <%= form.label :lname, "Last Name", class: "col-form-label fw-bold text-secondary" %>
+      </div>
+      <div class="col-md-9">
+        <%= form.text_field :lname, class: "form-control", placeholder: "Last Name" %>
+      </div>
+    </div>
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-3 text-md-end">
+        <%= form.label :email, "Email", class: "col-form-label fw-bold text-secondary" %>
+      </div>
+      <div class="col-md-9">
+        <%= form.email_field :email, class: "form-control", placeholder: "someone@example.com" %>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-md-9 offset-md-3">
+        <%= form.submit "Save Info", class: "btn btn-success px-4" %>
+      </div>
+    </div>
+
+  <% end %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true }) do |form| %>
+    <%# --- PHẦN 3: PASSWORD --- %>
+    <h5 class="text-primary fw-bold mb-3 border-bottom pb-2">Password</h5>
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-3 text-md-end">
+        <%= form.label :current_password, "Current Password", class: "col-form-label fw-bold text-secondary" %>
+      </div>
+      <div class="col-md-9">
+        <%= form.password_field :current_password, class: "form-control", placeholder: "******" %>
+      </div>
+    </div>
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-3 text-md-end">
+        <%= form.label :password, "New Password", class: "col-form-label fw-bold text-secondary" %>
+      </div>
+      <div class="col-md-9">
+        <%= form.password_field :password, class: "form-control", placeholder: "******" %>
+      </div>
+    </div>
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-3 text-md-end">
+        <%= form.label :password_confirmation, "Password Confirmation", class: "col-form-label fw-bold text-secondary" %>
+      </div>
+      <div class="col-md-9">
+        <%= form.password_field :password_confirmation, class: "form-control", placeholder: "******" %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-9 offset-md-3">
+        <%= form.submit "Save Password", class: "btn btn-success px-4" %>
+      </div>
+    </div>
+
+  <% end %>
+</div>
+<%# Javascript Preview đơn giản %>
+<!-- <script>
+  function previewAvatar(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = document.getElementById('avatar-preview');
+        img.src = e.target.result;
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script> -->

@@ -17,6 +17,11 @@ class HomeController < ApplicationController
   end
 
   def index
+    if current_user.role == "admin" 
+      redirect_to admin_root_path and return if user_signed_in?
+      return
+    end
+
     redirect_to photos_path(type: "following") and return if user_signed_in?
   end
 

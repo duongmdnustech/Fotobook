@@ -9,10 +9,12 @@ class UsersController < ApplicationController
 
   # GET /users/1 or /users/1.json
   def show
-    if params[:id] then
-      self.set_user
-      @photos = @user.public_photos
-    end
+    # if params[:id] then
+    #   self.set_user
+    #   @photos = @user.public_photos
+    # elsif params[:user_id] 
+    #   @user = User.user_with_public_details(params.expect(:user_id))
+    # end
   end
 
   # GET /users/new
@@ -70,12 +72,13 @@ class UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.user_with_public_details(params.expect(:id))
+      user_id = params[:id] || params[:user_id] || current_user.uid
+      @user = User.user_with_public_details(user_id)
     end
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.fetch(:user, {})
+      params.fetch(:user, {}).permit(:fname, :lname, :email, :password, :password_confirmation, :avatar, :role)
     end
 
     def require_login
@@ -83,10 +86,12 @@ class UsersController < ApplicationController
         redirect_to "/auth/login"
         return
       end
-
-      if !params[:id]
-        params[:id] = current_user.uid
-      end
       self.set_user
+    end
+
+    def check_params
+      puts "---------- Group Params ------------"
+      puts params.inspect
+      puts "------------------------------------"
     end
 end

@@ -1,0 +1,13 @@
+<div class="container w-100 mt-3 p-3 rounded shadow w-100">
+  <% if page == "profile" %>
+    <div class="w-100 d-flex align-items-center justify-content-end mb-5">
+      <a href="/photos/new" class="btn btn-success">+ Add Photo</a>
+    </div>
+  <% end %>
+  <div class="row">
+    <% user.photos.each do |photo| %>
+      <% next if user != current_user && !photo.status %>
+      <%= render "photos/profile/photo", photo: photo, class: "col-6 col-md-4 col-lg-3 mb-3" %>
+    <% end %>
+  </div>
+</div>

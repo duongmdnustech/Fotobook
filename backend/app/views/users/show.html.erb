@@ -1,4 +1,4 @@
-<p style="color: green"><%= notice %></p>
+
 <% content_for :head do %>
   <%= stylesheet_link_tag "definition", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag "view", "data-turbo-track": "reload" %>
@@ -6,6 +6,22 @@
 <%= render "users/shared/header", user: @user, page: "profile" %>
 
 <main>
-  <%= render "home/side_bar", page: "profile" %>
-  <%= render "users/shared/profile", user: @user ? @user : current_user, page: @user ? "user" : "profile" %>
+  <div class="container-fluid post-view mt-100">
+    <%= render "home/side_bar", page: "profile" %>
+    <div class="w-100">
+      <%= render "users/shared/profile", user: @user.uid === current_user.uid ? current_user : @user, page: @user.uid === current_user.uid ? "profile" : "user", class: "mb-3" %>
+
+      <% if request.path.include?('photos') %>
+        <%= render "photos/profile/user_photos_list", user: @user.uid === current_user.uid ? current_user : @user, page: @user.uid === current_user.uid ? "profile" : "user" %>
+      <% elsif request.path.include?('albums') %>
+        <%= render "albums/profile/index", user: @user.uid === current_user.uid ? current_user : @user, page: @user.uid === current_user.uid ? "profile" : "user" %>
+      <% elsif request.path.include?('followings') %>
+        <%= render "followings/profile/following", user: @user.uid === current_user.uid ? current_user : @user, page: @user.uid === current_user.uid ? "profile" : "user" %>
+      <% elsif request.path.include?('followers') %>
+        <%= render "followings/profile/follower", user: @user.uid === current_user.uid ? current_user : @user, page: @user.uid === current_user.uid ? "profile" : "user" %>
+      <% else %>
+        <%= render "photos/profile/user_photos_list", user: @user.uid === current_user.uid ? current_user : @user, page: @user.uid === current_user.uid ? "profile" : "user" %>
+      <% end %>
+    </div>
+  </div>
 </main>

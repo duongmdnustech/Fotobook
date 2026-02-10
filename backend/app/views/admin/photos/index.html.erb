@@ -1,0 +1,25 @@
+<div class="container-fluid ms-4">
+  <%= turbo_frame_tag "photos_list" do %>
+    <div id="photos" class="row g-4 justify-content-start mb-5">
+      <% @photos.each do |photo| %>
+        <div class="col-12 col-md-4 col-lg-3">
+          <div class="card custom-card h-100">
+            <div class="card-overlay-header">
+              <p class="text-truncate mb-0" title="<%= photo.title %>">
+                <%= photo.title %>
+              </p>
+              <a href="/photos/<%= photo.id %>/edit" class="text-decoration-none text-white bi bi-pencil-square ms-2" style="cursor: pointer;"></a>
+            </div>
+            
+            <%# Sử dụng image_tag nếu bạn dùng ActiveStorage hoặc link trực tiếp %>
+            <img src="<%= photo.url %>" class="card-img-custom" alt="<%= photo.title %>">
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4 fw-bold">
+      <%== @pagy.series_nav(:bootstrap) %>
+    </div>
+  <% end %>
+</div>

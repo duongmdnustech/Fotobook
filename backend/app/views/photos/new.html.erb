@@ -1,11 +1,15 @@
-<% content_for :title, "New photo" %>
+<% content_for :head do %>
+  <%= stylesheet_link_tag "definition", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "view", "data-turbo-track": "reload" %>
+<% end %>
+<%= render "users/shared/header", page: "new_photo" %>
 
-<h1>New photo</h1>
-
-<%= render "form", photo: @photo %>
-
-<br>
-
-<div>
-  <%= link_to "Back to photos", user_photos_path %>
-</div>
+<main>
+  <div class="container-fluid post-view mt-100">
+    <%= render "home/side_bar", page: "new_photo" %>
+    <div class="w-100 rounded shadow p-4 me-3">
+      <h2 class="fw-bold border-bottom pb-3 mb-3">New Photo</h2>
+      <%= render "form", photo: @photo %>
+    </div>
+  </div>
+</main>

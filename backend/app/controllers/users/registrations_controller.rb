@@ -3,6 +3,7 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
   before_action :configure_account_update_params, only: [:update]
+  before_action :resource, only: [:edit]
 
   # GET /resource/sign_up
   def new
@@ -16,15 +17,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  # GET /resource/edit
-  # def edit
-  #   super
-  # end
+  #GET /resource/edit
+  def edit
+    super
+  end
 
-  # PUT /resource
-  # def update
-  #   super
-  # end
+  #PUT /resource
+  def update
+    super
+  end
 
   # DELETE /resource
   # def destroy
@@ -40,7 +41,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
-  # protected
+  protected
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
@@ -48,10 +49,25 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   # If you have extra params to permit, append them to the sanitizer.
-  # def configure_account_update_params
-  #   devise_parameter_sanitizer.permit(:account_update, keys: [:attribute])
-  # end
+  def configure_account_update_params
+    devise_parameter_sanitizer.permit(:user, keys: [:lname, :fname, :avatar, :role])
+  end
 
+  def update_resource(resource, params)
+    # Nếu user điền password mới HOẶC đổi email -> Cần current_password
+    if params[:password].present? || params[:email] != resource.email
+      super
+    else
+      # Nếu chỉ đổi tên, avatar -> Không cần current_password
+      # Loại bỏ key current_password để tránh lỗi validation
+      params.delete(:current_password)
+      resource.update_without_password(params)
+    end
+  end
+
+  def after_update_path_for(resource)
+    edit_profile_path
+  end
   # The path used after sign up.
   # def after_sign_up_path_for(resource)
   #   super(resource)

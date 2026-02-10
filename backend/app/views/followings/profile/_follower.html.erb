@@ -1,0 +1,56 @@
+<% content_for :head do %>
+  <%= stylesheet_link_tag "definition", "data-turbo-track": "reload" %>
+<% end %>
+<div class="container mt-3 p-3 rounded shadow w-100">
+  <div class="row g-3"> 
+    <% user.followers.each do |f| %>
+      <div class="col-12 col-md-4 col-lg-3 d-flex justify-content-center">
+        
+        <div class="card text-center h-100 shadow-sm" style="width: 100%; max-width: 18rem;">
+          
+          <div class="card-body d-flex flex-column align-items-center">
+            
+            <div class="mb-3"> <% if f && f.avatar? %>
+                <%# Dùng helper hiển thị avatar đã tối ưu ở câu trả lời trước %>
+                <%= image_tag (f.avatar.url rescue ""), 
+                      alt: "User Avatar", 
+                      class: "rounded-circle object-fit-cover shadow-sm", 
+                      width: "100", height: "100" %> 
+              <% else %>
+                <div class="rounded-circle bg-primary text-white text-center fw-bold fs-1" style="width: 100px; height: 100px; line-height: 100px; aspect-ratio: 1 / 1;">
+                  <%= f.lname[0].capitalize + f.fname[0].capitalize %>
+                </div>
+              <% end %>
+            </div>
+
+            <h5 class="card-title fw-bold">
+              <%= f.respond_to?(:lname) && f.respond_to?(:fname) ? f.fname + " " + f.lname : "User Name" %>
+            </h5>
+            
+            <div class="d-flex gap-5 text-primary mb-3">
+              <div class="d-flex flex-column">
+                <div class="fw-bold fs-3"><%= f.public_photos.size %></div>
+                <div>Photos</div>
+              </div>
+              <div class="d-flex flex-column">
+                <div class="fw-bold fs-3"><%= f.public_albums.size %></div>
+                <div>Albums</div>
+              </div>
+            </div>
+            
+            <div data-controller="follow">
+              <% if current_user.active_followings.pluck(:following_id).include?(f.id) %>
+                <button type="button" class="btn btn-gradient btn-ms" id="unfollow-[<%= f.id %>]" style="font-weight: bold; font-size: 0.7rem;" data-action="follow#unfollow">Following</button>
+              <% else %>
+                <button type="button" class="btn btn-gradient-outline btn-ms" id="follow-[<%= f.id %>]" style="font-weight: bold; font-size: 0.7rem;" data-action="follow#follow">Follow</button>
+              <% end %>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    <% end %>
+
+  </div>
+</div>

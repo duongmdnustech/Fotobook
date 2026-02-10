@@ -1,0 +1,56 @@
+<% photo = photo_form.object %>
+
+<%# Chỉ hiện form upload cho object mới được build trong controller %>
+<% if photo.new_record? %>
+<div class="col-12 col-md-5 mb-4 album-photo-item">
+  <div class="card p-3 bg-light border-dashed h-100 mb-3 p-2">
+    <div class="row">
+      <div class="mb-3 col-6">
+        <%= photo_form.label :title, class: "form-label fw-bold" %>
+        <%= photo_form.text_field :title, class: "form-control", placeholder: "Photo Title" %>
+      </div>
+
+      <div class="w-50 mb-3 col-6"> 
+        <%= photo_form.label :status, "Sharing mode", class: "form-label fw-bold" %>
+        <%= photo_form.select :status, 
+              options_for_select([["Public", true], ["Private", false], ["Album Status", album&.status]], photo.status), 
+              { include_blank: false }, 
+              { class: "form-select" } %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-6 h-100">
+        <div class="h-100">
+          <%= form.label :description, class: "form-label fw-bold" %>
+          <%= form.text_area :description, class: "form-control", placeholder: "Photo Description", style: "height: 150px; resize: none;" %> 
+          <button type="button" 
+                  class="btn btn-danger mt-3"
+                  data-action="click->upload-album-photo#remove">
+            Delete
+          </button>
+        </div>
+      </div>
+      <div class="col-12 col-md-6" data-controller="form">
+        <%= photo_form.label :image, class: "form-label fw-bold" %>
+        <% has_image = photo.respond_to?(:url) && photo.url.present? %> 
+        
+        <%= photo_form.label :image, class: "image-upload-box position-relative #{'border-0 bg-transparent' if has_image}", style: "#{ 'height: auto; min-height: auto;' if has_image }" do %>
+          <div class="text-center text-muted <%= 'd-none' if has_image %>" data-form-target="placeholder">
+            <span style="font-size: 3rem; line-height: 1;">+</span>
+            <div class="small mt-1">Click to upload</div>
+          </div>
+
+          <%= image_tag (has_image ? photo.url : ""), 
+                class: "preview-result w-100 rounded shadow-sm #{'d-none' unless has_image}", 
+                style: "object-fit: contain; height: auto;", 
+                data: { form_target: "image" } %>
+
+          <%= photo_form.file_field :image, class: "d-none", accept: "image/*", 
+                data: { form_target: "input", action: "change->form#preview" } %> 
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

@@ -5,22 +5,25 @@
     }
   </style>
   <div class="photo-stack card-img-left w-50" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#albumModal-<%= album.album_id %>">
-    <%= image_tag album.public_photos.first.url, class: "card-img-left w-100 h-100", style: "object-fit: cover;", alt: album.title if album.public_photos.first.url.present? %>
+    <% f_photo = album.public_photos.first %>
+    <%= image_tag f_photo.url, class: "card-img-left w-100 h-100", style: "object-fit: cover;", alt: album.title if f_photo && f_photo.url.present? %>
   </div>
   
   <div class="card-body w-50">
     <%# Xóa min-width ở đây để text tự xuống dòng thay vì đẩy tràn khung %>
-    <div class="user-tab d-flex gap-2 align-items-center mb-4 position-relative z-5" data-controller="follow">
-      <%= link_to user_path(album.user.uid), class: "text-decoration-none d-flex align-items-center gap-1" do %>
-        <%= render "users/shared/avatar", avatar: album.user.avatar %>
-        <div class="small fw-bold text-primary truncate-1"><%= album.user.lname + " " + album.user.fname %></div>
+    <div class="user-tab d-flex gap-2 align-items-center justify-content-between mb-4" data-controller="follow">
+      <%= link_to user_albums_path(album.user), class: "text-decoration-none d-flex align-items-center gap-2 overflow-hidden" do %>
+        <%= render "users/shared/avatar", avatar: album.user.avatar, user: album.user %>
+        <div class="small fw-bold text-primary"><%= album.user.lname + " " + album.user.fname %></div>
       <% end %>
-      <% if params[:type] == 'discover' %>
-        <% if current_user.active_followings.pluck(:following_id).include?(album.user.id) %>
-          <button type="button" class="btn btn-gradient position-absolute end-0 btn-ms ms-2" id="unfollow-[<%= album.user.id %>]" style="font-weight: bold; font-size: 0.7rem;" data-action="follow#unfollow">Following</button>
-        <% else %>
-          <button type="button" class="btn btn-gradient-outline position-absolute end-0 btn-ms ms-2" id="follow-[<%= album.user.id %>]" style="font-weight: bold; font-size: 0.7rem;" data-action="follow#follow">Follow</button>
-        <% end %>
+      <% if params[:type] == 'discover' && current_user != album.user %>
+        <div class="flex-shrink-0 ms-2">
+          <% if current_user.active_followings.pluck(:following_id).include?(album.user.id) %>
+            <button type="button" class="btn btn-gradient btn-ms" id="unfollow-[<%= album.user.id %>]" style="font-weight: bold; font-size: 0.7rem;" data-action="follow#unfollow">Following</button>
+          <% else %>
+            <button type="button" class="btn btn-gradient-outline btn-ms" id="follow-[<%= album.user.id %>]" style="font-weight: bold; font-size: 0.7rem;" data-action="follow#follow">Follow</button>
+          <% end %>
+        </div>
       <% end %>
     </div>
     <%= tag.h5 album.title, class: "card-title text-truncate" %> 
@@ -28,7 +31,7 @@
     <div class="position-absolute end-0 bottom-0 w-50">
       <hr class="my-2 text-secondary opacity-25 w-100">
       <div class="text-end me-2 mb-2">
-        <%= tag.span album.public_at.strftime("%d/%m/%Y"), class: "small text-secondary" %>
+        <%= tag.span album && album.public_at ? album.public_at.strftime("%d/%m/%Y") : Time.current, class: "small text-secondary" %>
       </div>
     </div>
   </div>

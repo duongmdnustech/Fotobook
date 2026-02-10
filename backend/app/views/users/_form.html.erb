@@ -1,17 +1,112 @@
-<%= form_with(model: user) do |form| %>
-  <% if user.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
-
-      <ul>
-        <% user.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div>
-    <%= form.submit %>
-  </div>
+<% content_for :head do %>
+  <%= stylesheet_link_tag "definition", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "profile", "data-turbo-track": "reload" %>
 <% end %>
+<div class="container mt-5 mb-5" style="max-width: 700px;">
+  
+  <%= form_with(model: user, class: "needs-validation") do |form| %>
+
+    <%# --- PHẦN 1: AVATAR --- %>
+    <div class="text-center mb-4">
+      <%= form.label :avatar, class: "avatar-wrapper shadow-sm" do %>
+        
+        <% avatar_url = user.avatar? ? user.avatar.url : "https://via.placeholder.com/150" %>
+        <%= image_tag avatar_url, class: "w-100 h-100 object-fit-cover border shadow", id: "avatar-preview" %>
+        
+        <div class="avatar-overlay">
+          <span class="avatar-text">Change</span>
+        </div>
+
+        <%= form.file_field :avatar, class: "d-none", accept: "image/*", onchange: "previewAvatar(this)" %>
+      <% end %>
+    </div>
+    <%= form.hidden_field :role, value: user.role, class: "form-control" %>
+    <%# --- PHẦN 2: BASIC INFORMATION --- %>
+    <h5 class="text-primary fw-bold mb-3 border-bottom pb-2">Basic Information</h5>
+    
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-3 text-md-end">
+        <%= form.label :fname, "First Name", class: "col-form-label fw-bold text-secondary" %>
+      </div>
+      <div class="col-md-9">
+        <%= form.text_field :fname, class: "form-control", placeholder: "First Name" %>
+      </div>
+    </div>
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-3 text-md-end">
+        <%= form.label :lname, "Last Name", class: "col-form-label fw-bold text-secondary" %>
+      </div>
+      <div class="col-md-9">
+        <%= form.text_field :lname, class: "form-control", placeholder: "Last Name" %>
+      </div>
+    </div>
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-3 text-md-end">
+        <%= form.label :email, "Email", class: "col-form-label fw-bold text-secondary" %>
+      </div>
+      <div class="col-md-9">
+        <%= form.email_field :email, class: "form-control", placeholder: "someone@example.com" %>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-md-9 offset-md-3">
+        <%= form.submit "Save Info", class: "btn btn-success px-4" %>
+      </div>
+    </div>
+
+  <% end %>
+  <%= form_with(model: user, class: "needs-validation") do |form| %>
+    <%# --- PHẦN 3: PASSWORD --- %>
+    <h5 class="text-primary fw-bold mb-3 border-bottom pb-2">Password</h5>
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-3 text-md-end">
+        <%= form.label :current_password, "Current Password", class: "col-form-label fw-bold text-secondary" %>
+      </div>
+      <div class="col-md-9">
+        <%= form.password_field :current_password, class: "form-control", placeholder: "******" %>
+      </div>
+    </div>
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-3 text-md-end">
+        <%= form.label :password, "New Password", class: "col-form-label fw-bold text-secondary" %>
+      </div>
+      <div class="col-md-9">
+        <%= form.password_field :password, class: "form-control", placeholder: "******" %>
+      </div>
+    </div>
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-3 text-md-end">
+        <%= form.label :password_confirmation, "Password Confirmation", class: "col-form-label fw-bold text-secondary" %>
+      </div>
+      <div class="col-md-9">
+        <%= form.password_field :password_confirmation, class: "form-control", placeholder: "******" %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-9 offset-md-3">
+        <%= form.submit "Save Password", class: "btn btn-success px-4" %>
+      </div>
+    </div>
+
+  <% end %>
+</div>
+
+<%# Script để preview Avatar khi chọn ảnh %>
+<script>
+  function previewAvatar(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('avatar-preview').src = e.target.result;
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>

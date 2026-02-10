@@ -2,7 +2,7 @@
 
 class Users::SessionsController < Devise::SessionsController
   before_action :configure_sign_in_params, only: [:create]
-  after_action  :redirect_to_login, only: [:destroy]
+  before_action :check_active, only: [:create]
 
   # GET /resource/sign_in
   def new
@@ -11,7 +11,10 @@ class Users::SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
   def create
-    super
+    super do |resource|
+      resource.last_login_at = Time.current
+      resource.save!
+    end
   end
 
   # DELETE /resource/sign_out
@@ -19,15 +22,15 @@ class Users::SessionsController < Devise::SessionsController
     super
   end
 
-  # protected
+  protected
+    def check_active
+      @user = User.find_by(email: sign_in_params[:email])
+      if !@user || !@user.active
+        render :new, notice: "Your account is being locked!", status: :unauthorized
+      end
+    end
 
-  # If you have extra params to permit, append them to the sanitizer.
-  def configure_sign_in_params
-    devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
-  end
-
-  private 
-    def redirect_to_login
-      redirect_to "/auth/login"
+    def configure_sign_in_params
+      devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
     end
 end

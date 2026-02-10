@@ -19,4 +19,17 @@ class Album < ApplicationRecord
     order(updated_at: :desc).limit(limit).offset(offset)
   }
 
+  accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: :all_blank
+
+  before_validation :assign_user_to_photos
+
+  private
+
+  def assign_user_to_photos
+    # Lặp qua các photo (cả mới và cũ)
+    photos.each do |photo|
+      # Gán user_id của album cho photo nếu photo chưa có user
+      photo.user ||= self.user 
+    end
+  end
 end

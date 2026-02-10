@@ -9,7 +9,7 @@
   <div class="container" id="icon-3rd">
     <%=  render "users/shared/icon_group" %>
   </div>
-  <%= form_for(resource, as: resource_name, url: session_path(resource_name), class: "log-form") do |f| %>
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name), class: "log-form", data: { turbo: false }) do |f| %>
     <div class="field mb-2">
       <p><%= f.label :email, class: "form-label" %></p>
       <p><%= f.email_field :email, autofocus: true, required: true, autocomplete: "email", class: "form-control" %></p>

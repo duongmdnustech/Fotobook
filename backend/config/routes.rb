@@ -1,6 +1,14 @@
 require "sidekiq/web" # require the web UI
 
 Rails.application.routes.draw do
+  root to: "home#index"
+
+  namespace :admin do
+    root to: "home#index"
+    resources :photos
+    resources :albums
+    resources :users
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -14,7 +22,31 @@ Rails.application.routes.draw do
   # root "posts#index"
   mount Sidekiq::Web => "/sidekiq" # access it at http://localhost:3000/sidekiq
 
-  resources :photos, only: [:index, :show]
+  resources :photos, only: [:index, :show, :new, :create]
+
+  devise_for :users, path: 'auth', path_names: {
+    sign_up: 'register',
+    sign_in: "login", 
+    sign_out: "logout",
+    
+  },
+  controllers: {
+    registrations: 'users/registrations',
+    sessions: 'users/sessions'
+  }
+  
+  post 'follow/:id', to: 'followings#create', as: 'follow_user'
+  delete 'unfollow/:id', to: 'followings#destroy', as: 'unfollow_user'
+
+  resource :profile, controller: "users", except: [:new, :create] do
+    member do 
+      get '', to: "users#show"
+      get :photos, to: 'users#show'
+      get :albums, to: 'users#show'
+      get :followings, to: 'users#show'
+      get :followers, to: 'users#show'
+    end
+  end
 
   shallow do
     resources :albums do
@@ -22,26 +54,14 @@ Rails.application.routes.draw do
     end
 
     resources :users, only: [:index, :new, :create, :show] do
-      resources :photos
+      get '', to: 'users#show'
+      get 'photos', to: 'users#show'
+      get 'albums', to: 'users#show'
+      get 'followings', to: 'users#show'
+      get 'followers', to: 'users#show'
+      resources :photos, except: [:show]
     end
   end
-
-  devise_for :users, path: 'auth', path_names: {
-    sign_up: 'register',
-    sign_in: "login", 
-    sign_out: "logout"
-  },
-  controllers: {
-    registrations: 'users/registrations'
-  }
-  
-  post 'follow/:id', to: 'followings#create', as: 'follow_user'
-  delete 'unfollow/:id', to: 'followings#destroy', as: 'unfollow_user'
-
-  root to: "home#index"
-
-  resource :profile, controller: "users", except: [:new, :create]
-  resolve('User') {[:profile]}
 
   get 'test', to: "home#test_i18n"
 end

@@ -13,9 +13,9 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     # Cho phép thêm key :fname, :lname khi Đăng ký (sign_up)
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:fname, :lname])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:fname, :lname, :avatar])
 
     # Cho phép thêm key :fname, :lname khi Sửa tài khoản (account_update)
-    devise_parameter_sanitizer.permit(:account_update, keys: [:fname, :lname])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:fname, :lname, :avatar, :role, :remove_avatar])
   end
 end

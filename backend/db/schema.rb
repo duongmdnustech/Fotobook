@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_05_041226) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_09_062656) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -42,9 +42,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_041226) do
   create_table "photos", primary_key: "photo_id", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "album_id"
     t.string "description"
+    t.string "image", default: "", null: false
     t.datetime "public_at", default: -> { "now()" }
     t.boolean "status", default: false
-    t.string "title", null: false
+    t.string "title"
     t.datetime "upload_at", default: -> { "now()" }
     t.string "url"
     t.uuid "user_id", null: false
@@ -53,11 +54,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_05_041226) do
   end
 
   create_table "users", primary_key: "uid", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.boolean "active", default: true
     t.string "avatar"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.string "email", null: false
     t.boolean "enable_google_login", default: false
     t.string "fname", null: false
+    t.datetime "last_login_at", default: "2026-02-09 06:30:19"
     t.string "lname", null: false
     t.string "password", null: false
     t.datetime "remember_created_at"

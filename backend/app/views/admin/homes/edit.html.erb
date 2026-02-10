@@ -1,0 +1,12 @@
+<% content_for :title, "Editing home" %>
+
+<h1>Editing home</h1>
+
+<%= render "form", admin_home: @admin_home %>
+
+<br>
+
+<div>
+  <%= link_to "Show this home", @admin_home %> |
+  <%= link_to "Back to homes", admin_homes_path %>
+</div>

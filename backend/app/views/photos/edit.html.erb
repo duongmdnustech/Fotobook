@@ -1,12 +1,19 @@
-<% content_for :title, "Editing photo" %>
+<% content_for :head do %>
+  <%= stylesheet_link_tag "definition", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "view", "data-turbo-track": "reload" %>
+<% end %>
+<%= render "users/shared/header", page: "edit_photo" %>
 
-<h1>Editing photo</h1>
-
-<%= render "form", photo: @photo %>
-
-<br>
-
-<div>
-  <%= link_to "Show this photo", @photo %> |
-  <%= link_to "Back to photos", photos_path %>
-</div>
+<main>
+  <div class="container-fluid post-view mt-100">
+    <% if current_user.role == "user" %>
+      <%= render "home/side_bar", page: "edit_photo" %>
+    <% else %>
+      <%= render "admin/shared/side_bar", page: "edit_photo" %>
+    <% end %>
+    <div class="w-100 rounded shadow p-4 me-3 mt-2">
+      <h2 class="fw-bold border-bottom pb-3 mb-3">Editing Photo</h2>
+      <%= render "form", photo: @photo %>
+    </div>
+  </div>
+</main>

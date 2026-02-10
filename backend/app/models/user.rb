@@ -29,7 +29,7 @@ class User < ApplicationRecord
 
   mount_uploader :avatar, AvatarUploader
 
-  validates_with UserValidator
+  validates_with UserValidator, on: [:create]
   validates :fname, format: {with: /\A[A-Za-zÀ-ỹ]+\z/, message: "Invalid Name"}, unless: :fname.blank?
   validates :lname, format: {with: /\A[A-Za-zÀ-ỹ]+\z/, message: "Invalid Name"}, unless: :lname.blank?
   validates :email, uniqueness: true, format: {with: URI::MailTo::EMAIL_REGEXP, message: "Invalid Email"}, unless: :email.blank?
@@ -38,8 +38,7 @@ class User < ApplicationRecord
   format: {
     with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}\z/, 
     message:"Password must have at least 8 characters, contains at least 1 downcase alphabet, 1 uppercase alphabet, 1 number and 1 special character"
-  }, unless: :password.blank?
-
+  }, unless: :password.blank?, if: -> { new_record? || password.present? }
   after_validation -> (user) {
     if user.errors.any?
       user.errors.each do |e|
@@ -58,7 +57,7 @@ class User < ApplicationRecord
   has_many :albums, -> {includes :photos}, dependent: :destroy
   has_many :photos, -> {order(public_at: :desc)}, dependent: :destroy
   has_many :public_albums, -> {where(status: true).order(public_at: :desc).limit(6)}, class_name: "Album"
-  has_many :public_photos, -> {where(status: true).order(public_at: :desc)}, class_name: "Photo"
+  has_many :public_photos, -> {where(status: true).where.not(title: nil).order(public_at: :desc)}, class_name: "Photo"
 
   # Following other users
   has_many :active_followings, class_name: "Following", foreign_key: "follower_id", dependent: :destroy
