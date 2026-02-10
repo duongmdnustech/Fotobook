@@ -24,7 +24,7 @@
   <div class="mb-4">
     <h5 class="fw-bold mb-4">Select from Library</h5>
     <div class="row">
-      <% user_photos = current_user.photos %> 
+      <% user_photos = current_user.role == "user" ? current_user.photos : album.photos %> 
       <%= form.collection_check_boxes :photo_ids, user_photos, :id, :url do |b| %>
         <div class="col-6 col-md-3 mb-3">
           <div class="card h-100 shadow-sm">

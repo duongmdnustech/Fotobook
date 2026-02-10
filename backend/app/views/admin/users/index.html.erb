@@ -1,0 +1,50 @@
+<div class="container-fluid ms-4">
+  <%= turbo_frame_tag "photos_list" do %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">First Name</th>
+          <th scope="col">Last Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Last Login</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+        <tr>
+          <th scope="row"><%= user.fname %></th>
+          <td><%= user.lname %></td>
+          <td><%= user.email %></td>
+          <td><%= user.last_login_at&.strftime("%l:%M%P %m/%d/%Y") %></td>
+          <td class="d-flex gap-4">
+            <%# if user.role != "admin"%>
+              <%= link_to "", edit_admin_user_path(user), 
+                class: "text-decoration-none bi bi-pencil-square text-primary", 
+                style: "cursor: pointer;", 
+                data: { turbo_frame: "_top" } 
+              %>
+
+              <%= link_to "", admin_user_path(user), 
+                class: "text-decoration-none bi bi-trash text-danger", 
+                style: "cursor: pointer;", 
+                data: { 
+                  turbo_frame: "_top",
+                  turbo_method: :delete, 
+                  turbo_confirm: "Are you sure?"
+                } 
+              %>
+            <%# else %>
+              <!-- <div></div>
+              <div></div> -->
+            <%# end %>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-center mt-4 fw-bold">
+      <%== @pagy.series_nav(:bootstrap) %>
+    </div>
+  <% end %>
+</div>

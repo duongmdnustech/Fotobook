@@ -86,7 +86,7 @@ class AlbumsController < ApplicationController
     @album.destroy!
 
     respond_to do |format|
-      format.html { redirect_to albums_profile_path, notice: "Album was successfully destroyed.", status: :see_other }
+      format.html { redirect_to current_user.role == "user" ? albums_profile_path : admin_albums_path, notice: "Photo was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
   end

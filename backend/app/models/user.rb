@@ -39,10 +39,11 @@ class User < ApplicationRecord
     with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}\z/, 
     message:"Password must have at least 8 characters, contains at least 1 downcase alphabet, 1 uppercase alphabet, 1 number and 1 special character"
   }, unless: :password.blank?, if: -> { new_record? || password.present? }
+  
   after_validation -> (user) {
     if user.errors.any?
       user.errors.each do |e|
-        puts e.message        
+        puts e.full_message      
       end
     end
   }
@@ -69,7 +70,7 @@ class User < ApplicationRecord
   has_many  :passive_followers, class_name: "Following", foreign_key: "following_id", dependent: :destroy
   has_many  :followers, -> {select(:uid, :lname, :fname)}, class_name: "User", through: :passive_followers, source: :follower
   
-  scope :public_details, -> {select(:uid, :fname, :lname, :email)}
+  scope :public_details, -> {select(:uid, :fname, :lname, :email, :last_login_at, :active, :role)}
   
   def self.user_with_public_details uid 
     select(:uid, :fname, :lname, :email).find(uid)

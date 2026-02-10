@@ -27,11 +27,14 @@ ENV RAILS_ENV="production" \
     BUNDLE_WITHOUT="development" \
     LD_PRELOAD="/usr/local/lib/libjemalloc.so"
 
+
 # Throw-away build stage to reduce size of final image
 FROM base AS build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
+    apt-get install -y nodejs npm && \
+    npm install -g yarn && \
     apt-get install --no-install-recommends -y build-essential git libyaml-dev pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
@@ -51,10 +54,11 @@ COPY . .
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+RUN yarn install
+RUN yarn build:css
+
+# RUN yarn build
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
-
-
-
 
 # Final stage for app image
 FROM base

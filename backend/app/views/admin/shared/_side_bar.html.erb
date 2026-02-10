@@ -1,24 +1,26 @@
-<div data-controller="home" class="me-5">
-  <div class="sidebar d-none d-md-flex flex-column gap-2 p-3 ms-5">
-    <%# 1. Nút Feeds (Following) %>
-    <%= link_to "Manage Photos", 
-        admin_photos_path, 
-        class: "text-decoration-none text-nowrap mb-2 page fw-bold #{'disable' unless request.path.include?('photos')}",
-        id: "photo"
-    %>
+<div data-controller="home" class="me-5 w-100">
+  <div class="d-none d-md-flex flex-column p-3 sticky-top w-100 z-1" style="top: 20px;">
+    <div class="nav flex-row nav-pills gap-5 justify-self-center align-self-center" aria-orientation="vertical">
+      
+      <%= link_to admin_photos_path, 
+          class: "nav-link mb-2 text-start #{'active' if request.path.include?('photos')}",
+          id: "photo" do %>
+        <i class="bi bi-images me-2"></i> Manage Photos
+      <% end %>
 
-    <%# 2. Nút Discover (All) - Mặc định active nếu không có params hoặc params là discover %>
-    <%= link_to "Manage Albums", 
-        admin_albums_path, 
-        class: "text-decoration-none text-nowrap mb-2 page fw-bold #{'disable' unless request.path.include? 'albums'}",
-        id: "album"
-    %>
+      <%= link_to admin_albums_path, 
+          class: "nav-link mb-2 text-start #{'active' if request.path.include?('albums')}",
+          id: "album" do %>
+        <i class="bi bi-journal-album me-2"></i> Manage Albums
+      <% end %>
 
-    <%= link_to "Manage Users", 
-        admin_users_path, 
-        class: "text-decoration-none text-nowrap page fw-bold #{'disable' unless request.path.include? 'users'}",
-        id: "user"
-    %>
+      <%= link_to admin_users_path, 
+          class: "nav-link mb-2 text-start #{'active' if request.path.include?('users')}",
+          id: "user" do %>
+        <i class="bi bi-people me-2"></i> Manage Users
+      <% end %>
+      
+    </div>
   </div>
 
   <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">

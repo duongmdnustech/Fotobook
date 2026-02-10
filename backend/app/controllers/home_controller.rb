@@ -17,6 +17,10 @@ class HomeController < ApplicationController
   end
 
   def index
+    puts "======================"
+    puts current_user.role
+    puts current_user.email
+    puts "======================"
     if current_user.role == "admin" 
       redirect_to admin_root_path and return if user_signed_in?
       return

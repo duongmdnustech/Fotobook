@@ -62,7 +62,7 @@ class PhotosController < ApplicationController
   def update
     respond_to do |format|
       if @photo.update(photo_params)
-        format.html { redirect_to profile_path, notice: "Photo was successfully updated.", status: :see_other }
+        format.html { redirect_to current_user.role == "user" ? profile_path : admin_photos_path, notice: "Photo was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @photo }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -76,7 +76,7 @@ class PhotosController < ApplicationController
     @photo.destroy!
 
     respond_to do |format|
-      format.html { redirect_to profile_path, notice: "Photo was successfully destroyed.", status: :see_other }
+      format.html { redirect_to current_user.role == "user" ? photos_profile_path : admin_photos_path, notice: "Photo was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
   end
