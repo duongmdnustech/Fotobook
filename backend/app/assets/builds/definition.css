@@ -1,0 +1,116 @@
+:root {
+    --title-font-size: 22px;
+    --description-font-size: 16px;
+    --logo-size: 30px;
+    --color-white: #fcfcfc;
+    --color-blue-primary: #276CF5;
+    --color-blue-secondary: #BDE8F5;
+    --img-size-small: 30px;
+    --img-size-medium: 50px;
+    --img-size-large: 80px
+}
+
+.img-size-med {
+    width: var(--img-size-medium);
+    height: var(--img-size-medium);
+}
+
+.text-error {
+    font-size: 0.75rem;
+}
+
+.text-note {
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+.notice, .alert {
+    display: none
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.pe-none {
+  pointer-events: none;
+}
+
+.btn-gradient {
+  /* Màu chuyển từ Cam (trái) sang Đỏ/Hồng (phải) giống ảnh */
+  background: linear-gradient(90deg, #ffc107 0%, #ff5252 100%);
+  border: none; /* Bỏ viền mặc định của button */
+  transition: opacity 0.3s; /* Hiệu ứng mượt khi hover */
+  color: white;
+}
+
+/* Hiệu ứng khi di chuột vào: làm mờ nhẹ */
+.btn-gradient:hover {
+  opacity: 0.9;
+  color: rgb(255, 36, 36);
+  background: rgb(247, 148, 148);
+  font-size: 0 !important;
+}
+
+.btn-gradient:hover::after {
+  content: "Unfollow";
+  font-size: 0.7rem; /* Khôi phục lại cỡ chữ (bằng với cỡ chữ gốc của nút) */
+  font-weight: bold;
+}
+
+.btn-gradient-outline {
+  /* Thủ thuật 2 lớp nền: 
+     - Lớp 1: Màu trắng (padding-box) -> che phần giữa 
+     - Lớp 2: Gradient (border-box) -> hiện ra ở phần viền
+  */
+  background: 
+    linear-gradient(#fff 0 0) padding-box, 
+    linear-gradient(90deg, #ffc107 0%, #ff5252 100%) border-box;
+  
+  /* Viền phải trong suốt để nhìn thấy gradient bên dưới */
+  border: 2px solid transparent;
+  
+  /* Màu chữ: Nên chọn màu đậm nhất trong gradient (ở đây là đỏ hồng) */
+  color: #ff5252; 
+  
+  /* Hiệu ứng chuyển động */
+  transition: all 0.3s ease;
+}
+
+/* Hiệu ứng Hover: Đảo ngược lại thành nút đặc (giống nút following) */
+.btn-gradient-outline:hover {
+  /* Khi hover thì bỏ lớp nền trắng đi, chỉ còn gradient */
+  background: linear-gradient(90deg, #ffc107 0%, #ff5252 100%) padding-box;
+  color: white;
+  border-color: transparent; /* Hoặc giữ nguyên */
+}
+
+.image-upload-box {
+  width: 100%;          /* Chiếm hết chiều ngang của cột cha */
+  min-height: 200px;    /* Chiều cao tối thiểu để hiện dấu + */
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.3s;
+  
+  /* Quan trọng: Để canh giữa dấu + */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-upload-box:hover {
+  background-color: #e9ecef;
+  border-color: #aaa;
+}
+
+@media (width < 960) {
+  nav .title button {
+    display: block;
+  }
+
+  nav .item .home {
+    display: none;
+  }
+}
