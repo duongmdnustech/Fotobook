@@ -5,10 +5,10 @@
 
 <div class="container mt-5 mb-5" style="max-width: 700px;">
   
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true }) do |form| %>
-    <% has_image = resource.avatar.present? %>
+  <%= form_with(model: [:admin, user], class: "row g-4") do |form| %>
+    <% has_image = user.avatar.present? %>
     <%# Lưu URL gốc nếu có, nếu không thì để trống %>
-    <% original_url = has_image ? resource.avatar.url : "" %>
+    <% original_url = has_image ? user.avatar.url : "" %>
 
     <div class="text-center mb-2" data-controller="form">
       
@@ -66,7 +66,7 @@
       </div>
     </div>
 
-    <%= form.hidden_field :role, value: resource.role, class: "form-control" %>
+    <%= form.hidden_field :role, value: user.role, class: "form-control" %>
     <%# --- PHẦN 2: BASIC INFORMATION --- %>
     <h5 class="text-primary fw-bold mb-3 border-bottom pb-2">Basic Information</h5>
     
@@ -97,29 +97,9 @@
       </div>
     </div>
 
-    <div class="row mb-5">
-      <div class="col-md-9 offset-md-3">
-        <%= form.submit "Save Info", class: "btn btn-success px-4" %>
-      </div>
-    </div>
-
-  <% end %>
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true }) do |form| %>
-    <%# --- PHẦN 3: PASSWORD --- %>
-    <h5 class="text-primary fw-bold mb-3 border-bottom pb-2">Password</h5>
-
     <div class="row mb-3 align-items-center">
       <div class="col-md-3 text-md-end">
-        <%= form.label :current_password, "Current Password", class: "col-form-label fw-bold text-secondary" %>
-      </div>
-      <div class="col-md-9">
-        <%= form.password_field :current_password, class: "form-control", placeholder: "******" %>
-      </div>
-    </div>
-
-    <div class="row mb-3 align-items-center">
-      <div class="col-md-3 text-md-end">
-        <%= form.label :password, "New Password", class: "col-form-label fw-bold text-secondary" %>
+        <%= form.label :password, "Password", class: "col-form-label fw-bold text-secondary" %>
       </div>
       <div class="col-md-9">
         <%= form.password_field :password, class: "form-control", placeholder: "******" %>
@@ -128,18 +108,17 @@
 
     <div class="row mb-3 align-items-center">
       <div class="col-md-3 text-md-end">
-        <%= form.label :password_confirmation, "Password Confirmation", class: "col-form-label fw-bold text-secondary" %>
+        <%= form.label :active, "Active?", class: "col-form-label fw-bold text-secondary" %>
       </div>
       <div class="col-md-9">
-        <%= form.password_field :password_confirmation, class: "form-control", placeholder: "******" %>
+        <%= form.check_box :active %> 
       </div>
     </div>
 
-    <div class="row">
+    <div class="row mb-5">
       <div class="col-md-9 offset-md-3">
-        <%= form.submit "Save Password", class: "btn btn-success px-4" %>
+        <%= form.submit "Save Info", class: "btn btn-success px-4" %>
       </div>
     </div>
-
   <% end %>
 </div>

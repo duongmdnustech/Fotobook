@@ -3,12 +3,16 @@
     <div id="photos" class="row g-4 justify-content-start mb-5">
       <% @photos.each do |photo| %>
         <div class="col-12 col-md-4 col-lg-3">
-          <div class="card custom-card h-100">
+          <div class="card custom-card h-100 position-relative">
             <div class="card-overlay-header">
               <p class="text-truncate mb-0" title="<%= photo.title %>">
                 <%= photo.title %>
               </p>
-              <a href="/photos/<%= photo.id %>/edit" class="text-decoration-none text-white bi bi-pencil-square ms-2" style="cursor: pointer;"></a>
+              <%= link_to "", edit_photo_path(photo), 
+                  class: "text-decoration-none text-white bi bi-pencil-square ms-2 position-relative z-2", 
+                  style: "cursor: pointer;",
+                  data: { turbo_frame: "_top" } 
+              %>
             </div>
             
             <%# Sử dụng image_tag nếu bạn dùng ActiveStorage hoặc link trực tiếp %>
