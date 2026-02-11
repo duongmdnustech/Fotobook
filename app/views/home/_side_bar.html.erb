@@ -8,7 +8,8 @@
           class: "text-decoration-none page fw-bold #{'disable' unless params[:type] == 'following'}", 
           id: "feed",
           data: { 
-            action: "click->home#switch_page:prevent" # Giữ lại action để đổi màu ngay lập tức
+            action: "click->home#switch_page:prevent",
+            turbo_prefetch: false 
           } 
       %>
 
@@ -18,7 +19,8 @@
           class: "text-decoration-none page fw-bold #{'disable' if params[:type] == 'following'}", 
           id: "discover",
           data: { 
-            action: "click->home#switch_page:prevent" 
+            action: "click->home#switch_page:prevent",
+            turbo_prefetch: false 
           } 
       %>
     <% else %>
@@ -27,7 +29,8 @@
           class: "text-decoration-none page fw-bold #{'disable' unless params[:type] == 'following'}", 
           id: "feed",
           data: { 
-            action: "click->home#switch_page" # Giữ lại action để đổi màu ngay lập tức
+            action: "click->home#switch_page",
+            turbo_prefetch: false 
           } 
       %>
 
@@ -37,7 +40,8 @@
           class: "text-decoration-none page fw-bold #{'disable' unless params[:type] == 'discover'}", 
           id: "discover",
           data: { 
-            action: "click->home#switch_page" 
+            action: "click->home#switch_page",
+            turbo_prefetch: false  
           } 
       %>
     <% end %>
@@ -75,7 +79,8 @@
               class: "text-decoration-none page #{'disable' unless params[:type] == 'following'}", 
               id: "feed",
               data: { 
-                action: "click->home#switch_page" # Giữ lại action để đổi màu ngay lập tức
+                action: "click->home#switch_page",
+                turbo_prefetch: false 
               } 
           %>
         </li>
@@ -85,7 +90,8 @@
               class: "text-decoration-none page #{'disable' if params[:type] == 'following'}", 
               id: "discover",
               data: { 
-                action: "click->home#switch_page" 
+                action: "click->home#switch_page",
+                turbo_prefetch: false  
               } 
           %>
         </li>
@@ -152,7 +158,8 @@
               class: "text-decoration-none page #{'disable' unless params[:type] == 'following'}", 
               id: "feed",
               data: { 
-                action: "click->home#switch_page" # Giữ lại action để đổi màu ngay lập tức
+                action: "click->home#switch_page",
+                turbo_prefetch: false 
               } 
           %>
         </li>
@@ -162,7 +169,8 @@
               class: "text-decoration-none page #{'disable' if params[:type] == 'following'}", 
               id: "discover",
               data: { 
-                action: "click->home#switch_page" 
+                action: "click->home#switch_page",
+                turbo_prefetch: false  
               } 
           %>
         </li>

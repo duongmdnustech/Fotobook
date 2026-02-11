@@ -22,7 +22,7 @@
               <%= link_to "", edit_admin_user_path(user), 
                 class: "text-decoration-none bi bi-pencil-square text-primary", 
                 style: "cursor: pointer;", 
-                data: { turbo_frame: "_top" } 
+                data: { turbo_frame: "_top", turbo_prefetch: false } 
               %>
 
               <%= link_to "", admin_user_path(user), 
@@ -31,7 +31,8 @@
                 data: { 
                   turbo_frame: "_top",
                   turbo_method: :delete, 
-                  turbo_confirm: "Are you sure?"
+                  turbo_confirm: "Are you sure?",
+                  turbo_prefetch: false
                 } 
               %>
             <%# else %>

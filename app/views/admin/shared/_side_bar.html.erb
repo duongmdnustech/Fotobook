@@ -4,19 +4,19 @@
       
       <%= link_to admin_photos_path, 
           class: "nav-link mb-2 text-start #{'active' if request.path.include?('photos')}",
-          id: "photo" do %>
+          id: "photo", data: { turbo_prefetch: false } do %>
         <i class="bi bi-images me-2"></i> Manage Photos
       <% end %>
 
       <%= link_to admin_albums_path, 
           class: "nav-link mb-2 text-start #{'active' if request.path.include?('albums')}",
-          id: "album" do %>
+          id: "album", data: { turbo_prefetch: false } do %>
         <i class="bi bi-journal-album me-2"></i> Manage Albums
       <% end %>
 
       <%= link_to admin_users_path, 
           class: "nav-link mb-2 text-start #{'active' if request.path.include?('users')}",
-          id: "user" do %>
+          id: "user", data: { turbo_prefetch: false } do %>
         <i class="bi bi-people me-2"></i> Manage Users
       <% end %>
       

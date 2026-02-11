@@ -18,7 +18,7 @@
     
     <div class="user-tab d-flex gap-2 align-items-center justify-content-between mb-4" data-controller="follow">
       
-      <%= link_to user_path(photo.user), class: "text-decoration-none d-flex align-items-center gap-2 overflow-hidden" do %>
+      <%= link_to user_path(photo.user), class: "text-decoration-none d-flex align-items-center gap-2 overflow-hidden", data: { turbo_prefetch: false } do %>
         <%= render "users/shared/avatar", avatar: photo.user.avatar, user: photo.user %>
         
         <div class="small fw-bold text-primary"><%= photo.user.lname + " " + photo.user.fname %></div>
