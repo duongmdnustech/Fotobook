@@ -13,7 +13,7 @@
 
     <div class="profile-info">
       <% if user == current_user %>
-        <%= link_to "Edit Profile", edit_profile_path, class: "btn btn-outline-primary btn-sm rounded-pill px-3 py-0 mb-2", style: "font-size: 0.8rem; height: fit-content;" %>
+        <%= link_to "Edit Profile", edit_profile_path, class: "btn btn-outline-primary btn-sm rounded-pill px-3 py-0 mb-2", style: "font-size: 0.8rem; height: fit-content;", data: { turbo_prefetch: false } %>
       <% else %>
         <div class="flex-shrink-0 mb-2" data-controller="follow">
           <% if current_user.active_followings.pluck(:following_id).include?(user.id) %>
@@ -33,7 +33,7 @@
         <%# Kiểm tra active %>
         <% active_photos = request.path.include?('photos') %>
         
-        <%= link_to (user == current_user) ? photos_profile_path : user_photos_path(user), class: "me-4 text-decoration-none", style: "cursor: pointer;" do %>
+        <%= link_to (user == current_user) ? photos_profile_path : user_photos_path(user), class: "me-4 text-decoration-none", style: "cursor: pointer;", data: { turbo_prefetch: false } do %>
           <span class="fw-bold fs-5 <%= active_photos ? 'text-primary' : 'text-dark' %>">
             <%= (user == current_user) ? user.photos.size : user.public_photos.size %>
           </span> 
@@ -43,7 +43,7 @@
         <%# --- 2. ALBUMS TAB --- %>
         <% active_albums = request.path.include?('albums') %>
 
-        <%= link_to (user == current_user) ? albums_profile_path : user_albums_path(user), class: "mx-4 border-start ps-4 text-decoration-none", style: "cursor: pointer;" do %>
+        <%= link_to (user == current_user) ? albums_profile_path : user_albums_path(user), class: "mx-4 border-start ps-4 text-decoration-none", style: "cursor: pointer;", data: { turbo_prefetch: false } do %>
           <span class="fw-bold fs-5 <%= active_albums ? 'text-primary' : 'text-dark' %>">
             <%= (user == current_user) ? user.albums.size : user.public_albums.size %>
           </span> 
@@ -53,7 +53,7 @@
         <%# --- 3. FOLLOWINGS TAB --- %>
         <% active_followings = request.path.include?('followings') %>
 
-        <%= link_to (user == current_user) ? followings_profile_path : user_followings_path(user), class: "mx-4 border-start ps-4 text-decoration-none", style: "cursor: pointer;" do %>
+        <%= link_to (user == current_user) ? followings_profile_path : user_followings_path(user), class: "mx-4 border-start ps-4 text-decoration-none", style: "cursor: pointer;", data: { turbo_prefetch: false } do %>
           <span class="fw-bold fs-5 <%= active_followings ? 'text-primary' : 'text-dark' %>">
             <%= user.active_followings.size %>
           </span> 
@@ -63,7 +63,7 @@
         <%# --- 4. FOLLOWERS TAB --- %>
         <% active_followers = request.path.include?('followers') %>
 
-        <%= link_to (user == current_user) ? followers_profile_path : user_followers_path(user), class: "ms-4 border-start ps-4 text-decoration-none", style: "cursor: pointer;" do %>
+        <%= link_to (user == current_user) ? followers_profile_path : user_followers_path(user), class: "ms-4 border-start ps-4 text-decoration-none", style: "cursor: pointer;", data: { turbo_prefetch: false } do %>
           <span class="fw-bold fs-5 <%= active_followers ? 'text-primary' : 'text-dark' %>">
             <%= user.passive_followers.size %>
           </span> 

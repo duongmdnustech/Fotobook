@@ -1,7 +1,7 @@
 <div class="container w-100 mt-3 p-3 rounded shadow w-100">
   <% if page == "profile" %>
     <div class="w-100 d-flex align-items-center justify-content-end mb-5">
-      <a href="/photos/new" class="btn btn-success">+ Add Photo</a>
+      <%= link_to "+ Add Photo", new_photo_path, class: "btn btn-success", data: { turbo_prefetch: false } %>
     </div>
   <% end %>
   <div class="row">

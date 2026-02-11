@@ -4,7 +4,7 @@
 <div class="container mt-3 p-3 rounded shadow w-100">
   <% if page == "profile" %>
     <div class="d-flex justify-content-end mb-5">
-      <a href="/albums/new" class="btn btn-success">+ Add Album</a>
+      <%= link_to "+ Add Album", new_album_path, class: "btn btn-success", data: { turbo_prefetch: false } %>
     </div>
   <% end %>
 
