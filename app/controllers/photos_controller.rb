@@ -46,12 +46,14 @@ class PhotosController < ApplicationController
   # POST /photos or /photos.json
   def create
     @photo = current_user.photos.build(photo_params)
-
+    
     respond_to do |format|
       if @photo.save
-        format.html { redirect_to profile_path, notice: "Photo was successfully created." }
+        flash[:notice] = "Photo was successfully created."
+        format.html { redirect_to profile_path }
         format.json { render :show, status: :created, location: @photo }
       else
+        flash.now[:alert] = "Create photo fail!"
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @photo.errors, status: :unprocessable_entity }
       end
@@ -62,9 +64,11 @@ class PhotosController < ApplicationController
   def update
     respond_to do |format|
       if @photo.update(photo_params)
-        format.html { redirect_to current_user.role == "user" ? profile_path : admin_photos_path, notice: "Photo was successfully updated.", status: :see_other }
+        flash[:notice] = "Photo was successfully updated."
+        format.html { redirect_to current_user.role == "user" ? profile_path : admin_photos_path, status: :see_other }
         format.json { render :show, status: :ok, location: @photo }
       else
+        flash.now[:alert] = "Update photo fail!"
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @photo.errors, status: :unprocessable_entity }
       end
@@ -74,9 +78,9 @@ class PhotosController < ApplicationController
   # DELETE /photos/1 or /photos/1.json
   def destroy
     @photo.destroy!
-
+    flash[:notice] = "Photo was successfully destroyed."
     respond_to do |format|
-      format.html { redirect_to current_user.role == "user" ? photos_profile_path : admin_photos_path, notice: "Photo was successfully destroyed.", status: :see_other }
+      format.html { redirect_to current_user.role == "user" ? photos_profile_path : admin_photos_path, status: :see_other }
       format.json { head :no_content }
     end
   end

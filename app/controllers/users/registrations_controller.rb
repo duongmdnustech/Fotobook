@@ -13,6 +13,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # POST /resource
   def create
     super do |resource|
+      flash[:notice] = "Register Successfully"
       UserMailer.with(user_id: resource.uid).new_user_email.deliver_now
     end
   end

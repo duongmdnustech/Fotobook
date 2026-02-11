@@ -24,8 +24,9 @@
   </head>
 
   <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    <div id="toasts-container">
+      <%= render "shared/toasts" %>
+    </div>
     <%= yield %>
   </body>
 </html>

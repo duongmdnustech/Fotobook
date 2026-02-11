@@ -33,9 +33,11 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         UserMailer.with(user: @user).new_user_email.deliver_later
-        format.html { redirect_to @user, notice: "User was successfully created." }
+        flash[:notice] = "User was successfully created."
+        format.html { redirect_to @user }
         format.json { render :show, status: :created, location: @user }
       else
+        flash.now[:alert] = "User created fail!"
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
@@ -46,9 +48,11 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to edit_admin_user_path(@user), notice: "User was successfully updated.", status: :see_other }
+        flash[:notice] = "User was successfully updated."
+        format.html { redirect_to edit_admin_user_path(@user), status: :see_other }
         format.json { render :show, status: :ok, location: @user }
       else
+        flash.now[:alert] = "User updated fail!"
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
@@ -58,9 +62,9 @@ class UsersController < ApplicationController
   # DELETE /users/1 or /users/1.json
   def destroy
     @user.destroy!
-
+    flash[:notice] = "User was successfully destroyed."
     respond_to do |format|
-      format.html { redirect_to users_path, notice: "User was successfully destroyed.", status: :see_other }
+      format.html { redirect_to users_path, status: :see_other }
       format.json { head :no_content }
     end
   end

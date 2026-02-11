@@ -3,7 +3,6 @@ class Photo < ApplicationRecord
 
   mount_uploader :image, PhotoUploader
 
-  validates :title, presence: true, on: [:create, :update]
   validates :status, inclusion: {in: [true, false]}
 
   belongs_to :user

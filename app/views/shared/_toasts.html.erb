@@ -1,0 +1,26 @@
+<% if flash.any? %>
+  <div aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+    <% flash.each do |type, message| %>
+      <% 
+        bg_class = case type
+          when "notice" then "bg-success"
+          when "alert", "error" then "bg-danger"
+          else "bg-primary"
+        end
+      %>
+      
+      <div 
+        data-controller="toast" 
+        class="toast align-items-center text-white <%= bg_class %> border-0 mb-2" 
+        role="alert" aria-live="assertive" aria-atomic="true">
+        
+        <div class="d-flex">
+          <div class="toast-body">
+            <%= message %>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
