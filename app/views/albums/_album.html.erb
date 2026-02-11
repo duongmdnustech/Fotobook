@@ -12,7 +12,7 @@
   <div class="card-body w-50">
     <%# Xóa min-width ở đây để text tự xuống dòng thay vì đẩy tràn khung %>
     <div class="user-tab d-flex gap-2 align-items-center justify-content-between mb-4" data-controller="follow">
-      <%= link_to user_albums_path(album.user), class: "text-decoration-none d-flex align-items-center gap-2 overflow-hidden" do %>
+      <%= link_to user_albums_path(album.user), class: "text-decoration-none d-flex align-items-center gap-2 overflow-hidden", data: { turbo_prefetch: false } do %>
         <%= render "users/shared/avatar", avatar: album.user.avatar, user: album.user %>
         <div class="small fw-bold text-primary"><%= album.user.lname + " " + album.user.fname %></div>
       <% end %>

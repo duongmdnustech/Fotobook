@@ -14,14 +14,20 @@
         <%= link_to "Photo", photos_path(type: params[:type]), 
               class: (params[:controller] == "photos" ? active_class : inactive_class), 
               id: "photo-tab", 
-              data: { action: "click->home#switch_tab" } %>
+              data: { 
+                action: "click->home#switch_tab",
+                turbo_prefetch: false  
+              } %>
 
         <div style="height: 100%; width: 2px; background-color: aliceblue;"></div>
 
         <%= link_to "Album", albums_path(type: params[:type]), 
               class: (params[:controller] == "albums" ? active_class : inactive_class), 
               id: "album-tab", 
-              data: { action: "click->home#switch_tab" } %>
+              data: { 
+                action: "click->home#switch_tab",
+                turbo_prefetch: false  
+              } %>
       </div>
       <div id="card-group" class="w-100 mt-4">
         <% if params[:controller] == "photos" %>
