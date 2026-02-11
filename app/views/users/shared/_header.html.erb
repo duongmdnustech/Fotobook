@@ -45,7 +45,7 @@
     <% else %>
       <div class="item">
         <div class="d-none d-lg-flex gap-2 align-items-center home">
-          <%= link_to profile_path, class: "text-decoration-none text-white" do %>
+          <%= link_to profile_path, class: "text-decoration-none text-white", data: { turbo_prefetch: false } do %>
             <div class="profile d-flex gap-2 align-items-center text-decoration-none">
               <%= render "users/shared/avatar", avatar: current_user.avatar, user: current_user %>
               <div class="text-decoration-none"><%= current_user.fname + " " + current_user.lname %></div>
