@@ -13,7 +13,7 @@ gem 'rails-i18n'
 gem 'carrierwave', '~> 3.0'
 gem 'cloudinary'
 group :development, :test do
-  gem 'rspec-rails', '~> 8.0.0'
+  gem 'rspec-rails', '~> 8.0.3'
 end
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.1.1"
